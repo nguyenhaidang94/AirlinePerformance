@@ -1,8 +1,12 @@
 .state {
-	fill: rgb(213,222,217);
+	fill: #EEE;
+	stroke: #FFF;
 }
 
 .airport {
-	opacity: 1;
-	fill: green;
+	fill: turquoise;
+}
+
+.route {
+	fill: darkorange;
 }

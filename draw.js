@@ -9,7 +9,7 @@ var projection = d3.geoAlbersUsa()
 					.scale([1000]);
 var path = d3.geoPath(projection);
 
-map = svg.append("g");
+var map = svg.append("g");
 d3.json("us-states.json").then(function(json) {
 	map.selectAll("path")
 		.data(json.features)
@@ -19,13 +19,20 @@ d3.json("us-states.json").then(function(json) {
 		.attr("class", "state");
 });
 
-airport = svg.append("g");
-var originGeo = [-73.87259674, 40.77719879]
+var originGeo = [-117.383003235, 34.597499847399995]
+var destGeo = [-73.87259674, 40.77719879]
+var airport = svg.append("g");
 airport.selectAll("circleOrigin")
-	.data([originGeo])
+	.data([originGeo, destGeo])
 	.enter()
 	.append("circle")
 	.attr('cx', function (d) { return projection(d)[0]; })
 	.attr('cy', function (d) { return projection(d)[1]; })
 	.attr('r', '3px')
 	.attr('class', 'airport');
+
+var route = svg.append("g");
+route.append("path")
+	.datum({type: "LineString", coordinates: [originGeo, destGeo]})
+	.attr("d", path)
+	.attr("class", "route");
