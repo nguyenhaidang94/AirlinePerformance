@@ -8,5 +8,6 @@
 }
 
 .route {
-	fill: darkorange;
+	stroke: red;
+	fill: None;
 }
