@@ -32,7 +32,6 @@ d3.csv("delayed_airports.csv").then(function(data){
 		.attr('class', 'airport');
 });
 
-
 /*
 var route = svg.append("g");
 route.append("path")
