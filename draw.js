@@ -29,9 +29,11 @@ d3.csv("delayed_airports.csv").then(function(data){
 		.attr('cy', function (item) { return projection([item.origin_long, item.origin_lat])[1]; })
 		.attr('name', function (item) { return item.ORIGIN;})
 		.attr('r', '10px')
-		.attr('class', 'airport');
+		.attr('class', 'airport')
+		.on("click", function(item){console.log(item);});
 });
 
+/*
 var originGeo = [-117.383003235, 34.597499847399995]
 var destGeo = [-73.87259674, 40.77719879]
 var route = svg.append("g");
@@ -39,3 +41,4 @@ route.append("path")
 	.datum({type: "LineString", coordinates: [originGeo, destGeo]})
 	.attr("d", path)
 	.attr("class", "route");
+*/

@@ -7,6 +7,10 @@
 	fill: darkorange;
 }
 
+.airport:hover {
+	fill: red;
+}
+
 .route {
 	stroke: red;
 	fill: None;
