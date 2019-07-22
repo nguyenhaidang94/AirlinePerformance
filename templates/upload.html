@@ -1,0 +1,17 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Import data</title>
+</head>
+
+<body>
+	<h1>Import data</h1>
+	<form action="{{url_for('import_data')}}" method="POST" enctype = "multipart/form-data">
+		<input type = "file" name = "file" />
+ 		<input type = "submit" value="Submit"/>
+	</form>
+	<a href="{{url_for('home')}}">back</a>
+</body>
+
+</html> 

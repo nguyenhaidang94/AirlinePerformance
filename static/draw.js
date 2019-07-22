@@ -1,6 +1,6 @@
 var width = 960;
 var height = 600;
-var svg = d3.select("body").append("svg")
+var svg = d3.select("div.graphic").append("svg")
 	.attr("width", width)
 	.attr("height", height);
 
@@ -10,7 +10,7 @@ var projection = d3.geoAlbersUsa()
 var path = d3.geoPath(projection);
 
 var map = svg.append("g");
-d3.json("us-states.json").then(function(json) {
+d3.json("http://127.0.0.1:5000/static/us-states.json").then(function(json) {
 	map.selectAll("path")
 		.data(json.features)
 		.enter()
@@ -20,7 +20,7 @@ d3.json("us-states.json").then(function(json) {
 });
 
 var airport = svg.append("g");
-d3.csv("delayed_airports.csv").then(function(data){
+d3.csv("http://127.0.0.1:5000/static/delayed_airports.csv").then(function(data){
 	airport.selectAll("circleOrigin")
 		.data(data)
 		.enter()
