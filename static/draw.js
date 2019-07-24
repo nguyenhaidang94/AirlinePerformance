@@ -19,26 +19,48 @@ d3.json("http://127.0.0.1:5000/static/us-states.json").then(function(json) {
 		.attr("class", "state");
 });
 
+function getProjectedPoint(projector, airport){
+	projectedPoint = projector([airport.origin_long, airport.origin_lat]);
+	if (projectedPoint == null){
+		// return an empty point
+		return [-10,-10];
+	}
+	return projectedPoint;
+}
+
+function drawRoute(routeGraph, projector, airport){
+	console.log(airport.ORIGIN);
+	/*
+	var origin = projector([airport.origin_long, airport.origin_lat]);
+	var geo1 = projector([-87.9048, 41.9786]);
+	var geo2 = [50, 250];
+	
+	// remove old lines
+	routeGraph.selectAll("line").remove();
+	// draw new lines
+	routeGraph.selectAll("line")
+		.data([geo1, geo2])
+		.enter()
+		.append("line")
+		.attr('x1', origin[0])
+		.attr('y1', origin[1])
+		.attr('x2', function(item){return item[0];})
+		.attr('y2', function(item){return item[1];})
+		.attr("class", "route");
+	*/
+}
+
 var airport = svg.append("g");
-d3.csv("http://127.0.0.1:5000/static/delayed_airports.csv").then(function(data){
+var route = svg.append("g");
+d3.csv("http://127.0.0.1:5000/static/us_airports.csv").then(function(data){
 	airport.selectAll("circleOrigin")
 		.data(data)
 		.enter()
 		.append("circle")
-		.attr('cx', function (item) { return projection([item.origin_long, item.origin_lat])[0]; })
-		.attr('cy', function (item) { return projection([item.origin_long, item.origin_lat])[1]; })
+		.attr('cx', function (item) { return getProjectedPoint(projection, item)[0]; })
+		.attr('cy', function (item) { return getProjectedPoint(projection, item)[1]; })
 		.attr('name', function (item) { return item.ORIGIN;})
-		.attr('r', '10px')
+		.attr('r', '3px')
 		.attr('class', 'airport')
-		.on("click", function(item){console.log(item);});
+		.on("click", function(item){ drawRoute(route, projection, item)});
 });
-
-/*
-var originGeo = [-117.383003235, 34.597499847399995]
-var destGeo = [-73.87259674, 40.77719879]
-var route = svg.append("g");
-route.append("path")
-	.datum({type: "LineString", coordinates: [originGeo, destGeo]})
-	.attr("d", path)
-	.attr("class", "route");
-*/
