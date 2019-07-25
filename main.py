@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, json, Response
 from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = {'csv'}
@@ -25,3 +25,18 @@ def import_data():
 			return "Only csv files are allowed."
 		file.save("data/data.csv")
 		return render_template("upload_success.html")
+
+@app.route("/delayed-route/<airportCode>", methods=["GET"])
+def get_delayed_route(airportCode):
+	data = [{
+		"ORIGIN": "ATL",
+		"origin_lat": 33.6367,
+		"origin_long": -84.428101
+	}, {
+		"ORIGIN": "DFW",
+		"origin_lat": 32.896801,
+		"origin_long": -97.038002
+	}]
+	json_data = json.dumps(data)
+	resp = Response(json_data, status=200, mimetype='application/json')
+	return resp

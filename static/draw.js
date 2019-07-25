@@ -28,26 +28,38 @@ function getProjectedPoint(projector, airport){
 	return projectedPoint;
 }
 
-function drawRoute(routeGraph, projector, airport){
-	console.log(airport.ORIGIN);
-	/*
-	var origin = projector([airport.origin_long, airport.origin_lat]);
-	var geo1 = projector([-87.9048, 41.9786]);
-	var geo2 = [50, 250];
-	
+function drawRoutes(routeGraph, projector, origin, dests){
+	var projectedOrigin = projector([origin.origin_long, origin.origin_lat]);
+	var projectedDests = []
+	for (dest of dests){
+		var projectedDest = projector([dest.origin_long, dest.origin_lat]);
+		projectedDests.push(projectedDest);
+	}
 	// remove old lines
 	routeGraph.selectAll("line").remove();
 	// draw new lines
 	routeGraph.selectAll("line")
-		.data([geo1, geo2])
+		.data(projectedDests)
 		.enter()
 		.append("line")
-		.attr('x1', origin[0])
-		.attr('y1', origin[1])
+		.attr('x1', projectedOrigin[0])
+		.attr('y1', projectedOrigin[1])
 		.attr('x2', function(item){return item[0];})
 		.attr('y2', function(item){return item[1];})
 		.attr("class", "route");
-	*/
+}
+
+function airportOnClick(routeGraph, projector, airport){
+	$.ajax({
+		url: "http://127.0.0.1:5000/delayed-route/"+airport.ORIGIN,
+		success: function(response){
+			dests = response;
+			drawRoutes(routeGraph, projector, airport, dests);
+		},
+		error: function(response){
+			console.log("request error");
+		}
+	});
 }
 
 var airport = svg.append("g");
@@ -62,5 +74,5 @@ d3.csv("http://127.0.0.1:5000/static/us_airports.csv").then(function(data){
 		.attr('name', function (item) { return item.ORIGIN;})
 		.attr('r', '3px')
 		.attr('class', 'airport')
-		.on("click", function(item){ drawRoute(route, projection, item)});
+		.on("click", function(item){ airportOnClick(route, projection, item)});
 });
