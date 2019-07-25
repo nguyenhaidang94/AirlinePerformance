@@ -1,6 +1,6 @@
 var width = 960;
 var height = 600;
-var svg = d3.select("div.graphic").append("svg")
+var svg = d3.select("div#map").append("svg")
 	.attr("width", width)
 	.attr("height", height);
 
