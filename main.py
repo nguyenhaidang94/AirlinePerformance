@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, json, Response
-from werkzeug.utils import secure_filename
+from utils import *
 
 ALLOWED_EXTENSIONS = {'csv'}
 app = Flask(__name__)
@@ -23,7 +23,7 @@ def import_data():
 		file = request.files["file"]
 		if not allowed_file(file.filename):
 			return "Only csv files are allowed."
-		file.save("data/data.csv")
+		save_data(file)
 		return render_template("upload_success.html")
 
 @app.route("/delayed-route/<airportCode>", methods=["GET"])
