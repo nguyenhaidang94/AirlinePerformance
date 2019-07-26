@@ -2,6 +2,19 @@ from flask import Flask, render_template, url_for, request, json, Response
 from utils import *
 
 ALLOWED_EXTENSIONS = {'csv'}
+
+origin_col = "ORIGIN"
+dest_col = "DEST"
+dep_delay_new_col = "DEP_DELAY_NEW"
+
+origin_lat_col = "origin_lat"
+origin_long_col = "origin_long"
+dest_lat_col = "dest_lat"
+dest_long_col = "dest_long"
+
+full_data = load_data()
+airport_data = load_airport_data()
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -28,15 +41,13 @@ def import_data():
 
 @app.route("/delayed-route/<airportCode>", methods=["GET"])
 def get_delayed_route(airportCode):
-	data = [{
-		"ORIGIN": "ATL",
-		"origin_lat": 33.6367,
-		"origin_long": -84.428101
-	}, {
-		"ORIGIN": "DFW",
-		"origin_lat": 32.896801,
-		"origin_long": -97.038002
-	}]
-	json_data = json.dumps(data)
-	resp = Response(json_data, status=200, mimetype='application/json')
+	# return top 10 destination
+	n_top = 10
+	used_columns = [dest_col, dep_delay_new_col]
+	data = full_data.loc[full_data[origin_col] == airportCode, used_columns].groupby(by=dest_col).sum().sort_values(by=dep_delay_new_col, ascending=False)[0:n_top]
+	data[origin_lat_col] = data.index.to_series().apply(find_latitude, args=(airport_data,))
+	data[origin_long_col] = data.index.to_series().apply(find_longitute, args=(airport_data,))
+	json_string = data.to_json(orient="records")
+	
+	resp = Response(json_string, status=200, mimetype='application/json')
 	return resp
