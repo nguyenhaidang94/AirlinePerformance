@@ -4,6 +4,7 @@ import math
 DATA_FILE_PATH = "data/data.csv"
 AIRPORT_FILE_PATH = "data/airport_location.csv"
 
+airport_city_index = 2
 airport_code_index = 4
 airport_lat_index = 6
 airport_long_index = 7
@@ -16,6 +17,14 @@ def load_data():
 
 def load_airport_data():
 	return pd.read_csv(AIRPORT_FILE_PATH, header=None)
+
+def find_city(code, airport_data):
+	value = ""
+	try:
+		value = airport_data.loc[airport_data[airport_code_index] == code, airport_city_index].values[0]
+	except:
+		pass
+	return value
 
 def find_latitude(code, airport_data):
 	value = math.nan

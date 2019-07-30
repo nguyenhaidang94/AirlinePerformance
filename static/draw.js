@@ -19,6 +19,10 @@ d3.json("http://127.0.0.1:5000/static/us-states.json").then(function(json) {
 		.attr("class", "state");
 });
 
+var tooltip = d3.select("div#map").append("div")
+	.attr("class", "tooltip")
+	.style("opacity", 0);
+
 function getProjectedPoint(projector, airport){
 	projectedPoint = projector([airport.origin_long, airport.origin_lat]);
 	if (projectedPoint == null){
@@ -62,6 +66,19 @@ function airportOnClick(routeGraph, projector, airport){
 	});
 }
 
+function displayTooltip(item){
+	tooltip.transition().duration(200);
+	tooltip.html(item.ORIGIN + "<br>" + item.origin_city)
+		.style("opacity", 0.9)
+		.style("left", (d3.event.pageX) + "px")
+		.style("top", (d3.event.pageY - 28) + "px");
+}
+
+function hideTooltip(){
+	tooltip.transition().duration(200)
+		.style("opacity", 0);
+}
+
 var airport = svg.append("g");
 var route = svg.append("g");
 d3.csv("http://127.0.0.1:5000/static/us_airports.csv").then(function(data){
@@ -74,5 +91,7 @@ d3.csv("http://127.0.0.1:5000/static/us_airports.csv").then(function(data){
 		.attr('name', function (item) { return item.ORIGIN;})
 		.attr('r', '3px')
 		.attr('class', 'airport')
-		.on("click", function(item){ airportOnClick(route, projection, item)});
+		.on("click", function(item){ airportOnClick(route, projection, item);})
+		.on("mouseover", function(item){ displayTooltip(item); })
+		.on("mouseout", function(item){ hideTooltip() });
 });
