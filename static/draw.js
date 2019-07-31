@@ -68,10 +68,13 @@ function airportOnClick(routeGraph, projector, airport){
 
 function displayTooltip(item){
 	tooltip.transition().duration(200);
-	tooltip.html(item.ORIGIN + "<br>" + item.origin_city)
+	tooltip.html(item.ORIGIN + "<br>"
+				 + item.origin_city + "<br>"
+				+ "Delayed flights: " + parseFloat(item.pct_delay_flight).toFixed(2) + "%" + "<br>"
+				+ "Average delay: " + parseFloat(item.avg_delay).toFixed(0) + " minutes")
 		.style("opacity", 0.9)
 		.style("left", (d3.event.pageX) + "px")
-		.style("top", (d3.event.pageY - 28) + "px");
+		.style("top", (d3.event.pageY - 64) + "px");
 }
 
 function hideTooltip(){
