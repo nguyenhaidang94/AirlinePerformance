@@ -12,6 +12,8 @@
 	<script src="https://unpkg.com/topojson@3"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+  <link rel="stylesheet" href="{{url_for('static', filename='bar.css')}}">
+
 </head>
 
 <body>
@@ -19,6 +21,9 @@
 	<a href="{{url_for('home')}}">back</a>
 	<div class="graphic"></div>
 	<script src="{{url_for('static', filename='draw.js')}}"></script>
+  <div id = "mydiv"></div>
+  <script src="{{url_for('static', filename='bar_group.js')}}"></script>
+
 </body>
 
-</html> 
+</html>
