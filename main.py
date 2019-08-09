@@ -57,20 +57,6 @@ def get_delayed_airport():
 
 @app.route("/delayed-route/<airportCode>", methods=["GET"])
 def get_delayed_route(airportCode):
-<<<<<<< HEAD
-	data = [{
-		"ORIGIN": "ATL",
-		"origin_lat": 33.6367,
-		"origin_long": -84.428101
-	}, {
-		"ORIGIN": "DFW",
-		"origin_lat": 32.896801,
-		"origin_long": -97.038002
-	}]
-	json_data = json.dumps(data)
-	resp = Response(json_data, status=200, mimetype='application/json')
-	return resp
-=======
 	# return top 10 destination
 	n_top = 10
 	used_columns = [dest_col, dep_delay_new_col]
@@ -81,4 +67,3 @@ def get_delayed_route(airportCode):
 	json_string = data.to_json(orient="records")
 	resp = Response(json_string, status=200, mimetype='application/json')
 	return resp
->>>>>>> 26dc988d6a1afcb4692f7a8ada6d78c8e402443c

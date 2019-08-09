@@ -114,12 +114,7 @@ d3.csv("http://127.0.0.1:5000/static/us_airports.csv").then(function(data){
 		.attr('name', function (item) { return item.ORIGIN; })
 		.attr('r', function (item) {return getAirportLevel(parseInt(item.DEP_DEL15), avg_delay_flights); })
 		.attr('class', 'airport')
-<<<<<<< HEAD
-		.on("click", function(item){ airportOnClick(route, projection, item)});
-});
-=======
 		.on("click", function(item){ airportOnClick(routeGraph, projection, item);})
 		.on("mouseover", function(item){ displayTooltip(item); })
 		.on("mouseout", function(item){ hideTooltip() });
 });
->>>>>>> 26dc988d6a1afcb4692f7a8ada6d78c8e402443c
