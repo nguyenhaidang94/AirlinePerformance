@@ -5,6 +5,8 @@ DATA_FILE_PATH = "data/data.csv"
 AIRPORT_DELAY_FILE_PATH = "data/airport_delay.csv"
 ORIGIN_DELAY_FILE_PATH = "static/origin_delay.csv"
 AIRPORT_FILE_PATH = "data/airport_location.csv"
+ORIGIN_CARRIER_DELAY_FILE_PATH = "data/origin_carrier_delay.csv"
+UNIQUE_CARRIER_FILE_PATH = "data/unique_carriers.csv"
 
 origin_col = "ORIGIN"
 dest_col = "DEST"
@@ -43,6 +45,10 @@ def process_origin_delay(delay_data, airport_info):
 	
 	origin_delay_data.to_csv(ORIGIN_DELAY_FILE_PATH)
 
+def process_origin_carrier_delay(data):
+	used_columns = [origin_col, "OP_UNIQUE_CARRIER", dep_delay_15_col]
+	data[used_columns].to_csv(ORIGIN_CARRIER_DELAY_FILE_PATH)
+
 def load_data():
 	return pd.read_csv(DATA_FILE_PATH)
 
@@ -51,6 +57,12 @@ def load_delay_data():
 
 def load_airport_data():
 	return pd.read_csv(AIRPORT_FILE_PATH, header=None)
+
+def load_origin_carrier_delay():
+	return pd.read_csv(ORIGIN_CARRIER_DELAY_FILE_PATH)
+
+def load_unique_carrier():
+	return pd.read_csv(UNIQUE_CARRIER_FILE_PATH)
 
 def find_city(code, airport_info):
 	value = ""
@@ -72,6 +84,14 @@ def find_longitute(code, airport_info):
 	value = math.nan
 	try:
 		value = airport_info.loc[airport_info[airport_code_index] == code, airport_long_index].values[0]
+	except:
+		pass
+	return value
+
+def find_carrier_name(code, unique_carrier):
+	value = ""
+	try:
+		value = unique_carrier.loc[unique_carrier["Code"] == code, "Description"].values[0]
 	except:
 		pass
 	return value

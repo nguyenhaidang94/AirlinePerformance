@@ -64,6 +64,29 @@ function airportOnClick(routeGraph, projector, airport){
 			console.log("request error");
 		}
 	});
+	$.ajax({
+		url: "http://127.0.0.1:5000/delayed-carrier/"+airport.ORIGIN,
+		success: function(response){
+			var delayed_carriers = response;
+			carrier_names = []
+			var percentage_delays = [];
+			for (delayed_carrier of delayed_carriers){
+				carrier_names.push(delayed_carrier.carrier_name);
+				percentage_delays.push(delayed_carrier.pct_delay_flight);
+			}
+
+			var graph_data = [{
+		   		x: carrier_names,
+		  		y: percentage_delays,
+			  	type: 'bar'
+			}];
+
+			Plotly.react('carrier-bar', graph_data);
+		},
+		error: function(response){
+			console.log("request error");
+		}
+	});
 }
 
 function displayTooltip(item){
