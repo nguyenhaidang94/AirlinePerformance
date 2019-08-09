@@ -37,6 +37,8 @@ def import_data():
 		process_origin_delay(airport_delay_data, airport_info)
 		airport_delay_data = load_delay_data()
 
+		process_origin_carrier_delay(data)
+
 		return render_template("upload_success.html")
 
 def get_delayed_airport():
@@ -56,7 +58,7 @@ def get_delayed_airport():
 
 @app.route("/delayed-route/<airportCode>", methods=["GET"])
 def get_delayed_route(airportCode):
-	# return top 10 destination
+	# return top 10 destinations
 	n_top = 10
 	used_columns = [dest_col, dep_delay_new_col]
 	data = airport_delay_data.loc[airport_delay_data[origin_col] == airportCode, used_columns].groupby(by=dest_col).sum().sort_values(by=dep_delay_new_col, ascending=False)[0:n_top]
@@ -64,5 +66,23 @@ def get_delayed_route(airportCode):
 	data[origin_long_col] = data.index.to_series().apply(find_longitute, args=(airport_info,))
 	
 	json_string = data.to_json(orient="records")
+	resp = Response(json_string, status=200, mimetype='application/json')
+	return resp
+
+@app.route("/delayed-carrier/<airportCode>", methods=["GET"])
+def get_delayed_carrier(airportCode):
+	# return top 10 carriers
+	n_top = 10
+	full_data = load_origin_carrier_delay()
+	used_columns = ["OP_UNIQUE_CARRIER", dep_delay_15_col]
+	data = full_data.loc[full_data[origin_col] == airportCode, used_columns]
+	data["n_flights"] = 1
+	carrier_delay = data.groupby(by="OP_UNIQUE_CARRIER").sum()
+	carrier_delay["pct_delay_flight"] = carrier_delay["DEP_DEL15"]/carrier_delay["n_flights"]*100
+
+	unique_carrier = load_unique_carrier()
+	carrier_delay["carrier_name"] = carrier_delay.index.to_series().apply(find_carrier_name, args=(unique_carrier,))
+
+	json_string = carrier_delay.sort_values(by="pct_delay_flight", ascending=False)[0:n_top].to_json(orient="records")
 	resp = Response(json_string, status=200, mimetype='application/json')
 	return resp
