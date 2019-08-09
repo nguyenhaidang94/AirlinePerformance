@@ -9,6 +9,7 @@
 	<script src="https://d3js.org/d3-geo.v1.min.js"></script>
 	<script src="https://d3js.org/d3-dsv.v1.min.js"></script>
 	<script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+	<script src="https://d3js.org/d3-transition.v1.min.js"></script>
 	<script src="https://unpkg.com/topojson@3"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://d3js.org/d3-transition.v1.min.js"></script>
@@ -21,7 +22,7 @@
 <body>
 	<h1>Visualization</h1>
 	<a href="{{url_for('home')}}">back</a>
-	<div class="graphic"></div>
+	<div id="map"></div>
 	<script src="{{url_for('static', filename='draw.js')}}"></script>
   <div id = "mydiv"></div>
   <script src="{{url_for('static', filename='bar_group.js')}}"></script>

@@ -1,3 +1,2 @@
-data/**
-!data/empty.txt
+data/data.csv
 __pycache__/**
