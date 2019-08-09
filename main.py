@@ -78,7 +78,7 @@ def get_delayed_carrier(airportCode):
 	data = full_data.loc[full_data[origin_col] == airportCode, used_columns]
 	data["n_flights"] = 1
 	carrier_delay = data.groupby(by="OP_UNIQUE_CARRIER").sum()
-	carrier_delay["pct_delay_flight"] = carrier_delay["DEP_DEL15"]/carrier_delay["n_flights"]*100
+	carrier_delay["pct_delay_flight"] = carrier_delay["DEP_DEL15"]/carrier_delay["n_flights"]
 
 	unique_carrier = load_unique_carrier()
 	carrier_delay["carrier_name"] = carrier_delay.index.to_series().apply(find_carrier_name, args=(unique_carrier,))
