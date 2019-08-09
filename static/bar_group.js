@@ -45,13 +45,12 @@
                 type :d.type
           };
         }).then(function(rows) {
-          console.log(rows);
           render(rows);
         });
       }
 
     draw("http://127.0.0.1:5000/static/groupbarchart.json");
-    function displayTooltip(item){
+    function displayTooltipBar(item){
     	tooltip.transition().duration(200);
     	tooltip.html(
     				 "Delay time: " + item.delay_time + " minutes"
@@ -155,7 +154,7 @@
                                         .attr("height", function(d) { return height - y(2);})
                                         .on("mouseover", function(d) {
                                             d3.select(this).style("fill", d3.rgb(color(d.type)).darker(2));
-                                             displayTooltip(d);
+                                             displayTooltipBar(d);
                                                 })
                                         .on("mouseout", function(d) {
                                                 d3.select(this).style("fill", color(d.type));
