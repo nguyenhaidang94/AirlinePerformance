@@ -3,18 +3,8 @@ from utils import *
 
 ALLOWED_EXTENSIONS = {'csv'}
 
-origin_col = "ORIGIN"
-dest_col = "DEST"
-dep_delay_new_col = "DEP_DELAY_NEW"
-dep_delay_15_col = "DEP_DEL15"
-n_flights_col = "n_flights"
 
-origin_lat_col = "origin_lat"
-origin_long_col = "origin_long"
-dest_lat_col = "dest_lat"
-dest_long_col = "dest_long"
-
-airport_data = load_airport_data()
+airport_info = load_airport_data()
 airport_delay_data = load_delay_data()
 
 app = Flask(__name__)
@@ -39,11 +29,18 @@ def import_data():
 		if not allowed_file(file.filename):
 			return "Only csv files are allowed."
 		save_data(file)
+		data = load_data()
+
+		airport_delay_data = process_airport_delay(data)
+		airport_delay_data.to_csv(AIRPORT_DELAY_FILE_PATH)
+
+		process_origin_delay(airport_delay_data, airport_info)
+		airport_delay_data = load_delay_data()
+
 		return render_template("upload_success.html")
 
 def get_delayed_airport():
 	#airport_delay_data = load_delay_data()
-
 	used_columns = [origin_col, dest_col, dep_delay_new_col, dep_delay_15_col]
 	data = airport_delay_data[used_columns]
 	data[n_flights_col] = 1
@@ -51,22 +48,20 @@ def get_delayed_airport():
 	origin_delay_data["avg_delay"] = origin_delay_data[dep_delay_new_col]/origin_delay_data[n_flights_col]
 	origin_delay_data["pct_delay_flight"] = origin_delay_data[dep_delay_15_col]/origin_delay_data[n_flights_col]*100
 
-	origin_delay_data["origin_city"] = origin_delay_data.index.to_series().apply(find_city, args=(airport_data,))
-	origin_delay_data[origin_lat_col] = origin_delay_data.index.to_series().apply(find_latitude, args=(airport_data,))
-	origin_delay_data[origin_long_col] = origin_delay_data.index.to_series().apply(find_longitute, args=(airport_data,))
+	origin_delay_data["origin_city"] = origin_delay_data.index.to_series().apply(find_city, args=(airport_info,))
+	origin_delay_data[origin_lat_col] = origin_delay_data.index.to_series().apply(find_latitude, args=(airport_info,))
+	origin_delay_data[origin_long_col] = origin_delay_data.index.to_series().apply(find_longitute, args=(airport_info,))
 	
 	return origin_delay_data
 
 @app.route("/delayed-route/<airportCode>", methods=["GET"])
 def get_delayed_route(airportCode):
-	#airport_delay_data = load_delay_data()
-
 	# return top 10 destination
 	n_top = 10
 	used_columns = [dest_col, dep_delay_new_col]
 	data = airport_delay_data.loc[airport_delay_data[origin_col] == airportCode, used_columns].groupby(by=dest_col).sum().sort_values(by=dep_delay_new_col, ascending=False)[0:n_top]
-	data[origin_lat_col] = data.index.to_series().apply(find_latitude, args=(airport_data,))
-	data[origin_long_col] = data.index.to_series().apply(find_longitute, args=(airport_data,))
+	data[origin_lat_col] = data.index.to_series().apply(find_latitude, args=(airport_info,))
+	data[origin_long_col] = data.index.to_series().apply(find_longitute, args=(airport_info,))
 	
 	json_string = data.to_json(orient="records")
 	resp = Response(json_string, status=200, mimetype='application/json')

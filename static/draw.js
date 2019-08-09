@@ -91,7 +91,7 @@ function getAirportLevel(delay_flights, avg_delay_flights){
 
 var airportGraph = svg.append("g");
 var routeGraph = svg.append("g");
-d3.csv("http://127.0.0.1:5000/static/us_airports.csv").then(function(data){
+d3.csv("http://127.0.0.1:5000/static/origin_delay.csv").then(function(data){
 	var min_delay_flights = Number.MAX_SAFE_INTEGER;
 	var max_delay_flights = 0;
 	for (airport of data){
