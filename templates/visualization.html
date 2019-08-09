@@ -14,6 +14,12 @@
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://d3js.org/d3-transition.v1.min.js"></script>
   <script src="https://d3js.org/d3-scale.v3.min.js"></script>
+  <script src= "{{url_for('static', filename='underscore.js')}}"></script>
+  <script src= "{{url_for('static', filename='underscore.nest.js')}}"></script>
+  <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="//unpkg.com/sunburst-chart"></script>
+
 	<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
   <link rel="stylesheet" href="{{url_for('static', filename='bar.css')}}">
 
@@ -26,7 +32,9 @@
 	<script src="{{url_for('static', filename='draw.js')}}"></script>
   <div id = "mydiv"></div>
   <script src="{{url_for('static', filename='bar_group.js')}}"></script>
-  
+  <div id = "sunburst"></div>
+  <script src="{{url_for('static', filename='sunburst.js')}}"></script>
+
 </body>
 
 </html>
