@@ -2,6 +2,7 @@ import pandas as pd
 import math
 
 DATA_FILE_PATH = "data/data.csv"
+AIRPORT_DELAY_FILE_PATH = "data/airport_delay.csv"
 AIRPORT_FILE_PATH = "data/airport_location.csv"
 
 airport_city_index = 2
@@ -12,8 +13,11 @@ airport_long_index = 7
 def save_data(file):
 	file.save(DATA_FILE_PATH)
 
-def load_data():
+def load__data():
 	return pd.read_csv(DATA_FILE_PATH)
+
+def load_delay_data():
+	return pd.read_csv(AIRPORT_DELAY_FILE_PATH)
 
 def load_airport_data():
 	return pd.read_csv(AIRPORT_FILE_PATH, header=None)

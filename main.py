@@ -14,8 +14,8 @@ origin_long_col = "origin_long"
 dest_lat_col = "dest_lat"
 dest_long_col = "dest_long"
 
-full_data = load_data()
 airport_data = load_airport_data()
+airport_delay_data = load_delay_data()
 
 app = Flask(__name__)
 
@@ -42,8 +42,10 @@ def import_data():
 		return render_template("upload_success.html")
 
 def get_delayed_airport():
+	#airport_delay_data = load_delay_data()
+
 	used_columns = [origin_col, dest_col, dep_delay_new_col, dep_delay_15_col]
-	data = full_data[used_columns]
+	data = airport_delay_data[used_columns]
 	data[n_flights_col] = 1
 	origin_delay_data = data.groupby(by=origin_col).sum()
 	origin_delay_data["avg_delay"] = origin_delay_data[dep_delay_new_col]/origin_delay_data[n_flights_col]
@@ -57,10 +59,12 @@ def get_delayed_airport():
 
 @app.route("/delayed-route/<airportCode>", methods=["GET"])
 def get_delayed_route(airportCode):
+	#airport_delay_data = load_delay_data()
+
 	# return top 10 destination
 	n_top = 10
 	used_columns = [dest_col, dep_delay_new_col]
-	data = full_data.loc[full_data[origin_col] == airportCode, used_columns].groupby(by=dest_col).sum().sort_values(by=dep_delay_new_col, ascending=False)[0:n_top]
+	data = airport_delay_data.loc[airport_delay_data[origin_col] == airportCode, used_columns].groupby(by=dest_col).sum().sort_values(by=dep_delay_new_col, ascending=False)[0:n_top]
 	data[origin_lat_col] = data.index.to_series().apply(find_latitude, args=(airport_data,))
 	data[origin_long_col] = data.index.to_series().apply(find_longitute, args=(airport_data,))
 	
