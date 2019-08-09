@@ -88,7 +88,7 @@ function handleDrawingBarCarrier(airport){
 				title: airport.ORIGIN + ", " + airport.origin_city,
 				yaxis: {
 					title: {
-						text: "Percentage delayed flight"
+						text: "% delayed flight"
 					},
 					tickformat: '%',
 				}
