@@ -11,6 +11,7 @@
 	<script src="https://d3js.org/d3-fetch.v1.min.js"></script>
 	<script src="https://d3js.org/d3-transition.v1.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
   <script src="https://d3js.org/d3-transition.v1.min.js"></script>
   <script src="https://d3js.org/d3-scale.v3.min.js"></script>
   <script src= "{{url_for('static', filename='underscore.js')}}"></script>
@@ -23,6 +24,41 @@
 	<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
   <link rel="stylesheet" href="{{url_for('static', filename='bar.css')}}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+
+  <!-- Heatmap calendar -->
+  <!-- <script src="http://code.jquery.com/jquery-1.10.2.js"></script> -->
+  <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bootstrap.css')}}">
+  <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script> -->
+
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='calendar-heatmap.min.css')}}">
+  <script src="{{url_for('static', filename='calendar-heatmap.min.js')}}"></script>
+  <style>
+.calender-map {
+    font: 10px sans-serif;
+    shape-rendering: crispEdges;
+  }
+  .day {
+    stroke: #666;
+  }
+  .month {
+    fill: none;
+    stroke: #000;
+    stroke-width: 2px;
+  }
+  .RdYlGn .q0-11{fill:rgb(165,0,38)}
+  .RdYlGn .q1-{fill:rgb(215,48,39)}
+  .RdYlGn .q2-11{fill:rgb(244,109,67)}
+  .RdYlGn .q3-11{fill:rgb(253,174,97)}
+  .RdYlGn .q4-11{fill:rgb(254,224,139)}
+  .RdYlGn .q5-11{fill:rgb(255,255,19 TypeError: csv.forEach is no1)}
+  .RdYlGn .q6-11{fill:rgb(217,239,139)}
+  .RdYlGn .q7-11{fill:rgb(166,217,106)}
+  .RdYlGn .q8-11{fill:rgb(102,189,99)}
+  .RdYlGn .q9-11{fill:rgb(26,152,80)}
+  .RdYlGn .q10-11{fill:rgb(0,104,55)}
+  </style>
 
 </head>
 
@@ -64,7 +100,8 @@
   <script src="{{url_for('static', filename='bar_group.js')}}"></script>
   <div id = "sunburst"></div>
   <script src="{{url_for('static', filename='sunburst.js')}}"></script>
-
+  <div class="calender-map"></div>
+  <script src="{{url_for('static', filename='calendarmap.js')}}"></script>
 </body>
 
 </html>
