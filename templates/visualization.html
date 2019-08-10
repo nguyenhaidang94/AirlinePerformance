@@ -10,14 +10,13 @@
 	<script src="https://d3js.org/d3-dsv.v1.min.js"></script>
 	<script src="https://d3js.org/d3-fetch.v1.min.js"></script>
 	<script src="https://d3js.org/d3-transition.v1.min.js"></script>
-	<script src="https://unpkg.com/topojson@3"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://d3js.org/d3-transition.v1.min.js"></script>
   <script src="https://d3js.org/d3-scale.v3.min.js"></script>
   <script src= "{{url_for('static', filename='underscore.js')}}"></script>
   <script src= "{{url_for('static', filename='underscore.nest.js')}}"></script>
   <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
-  <script src="https://unpkg.com/sunburst-chart"></script>
+  <script src="//unpkg.com/sunburst-chart"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 	<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
@@ -28,8 +27,10 @@
 <body>
 	<h1>Visualization</h1>
 	<a href="{{url_for('home')}}">back</a>
-	<div id="map"></div>
-	<div id="carrier-bar">
+  <div class="max-width">
+      <div id="map"></div>
+      <div id="carrier-bar"></div>
+  </div>
 	<script src="{{url_for('static', filename='draw.js')}}"></script>
   <div id = "mydiv">
     <div>

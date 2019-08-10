@@ -1,5 +1,5 @@
-var width = 960;
-var height = 600;
+var width = 780;
+var height = 480;
 var svg = d3.select("div#map").append("svg")
 	.attr("width", width)
 	.attr("height", height);
@@ -53,7 +53,7 @@ function drawRoutes(routeGraph, projector, origin, dests){
 		.attr("class", "route");
 }
 
-function airportOnClick(routeGraph, projector, airport){
+function handleDrawingRoute(routeGraph, projector, airport){
 	$.ajax({
 		url: "http://127.0.0.1:5000/delayed-route/"+airport.ORIGIN,
 		success: function(response){
@@ -64,6 +64,9 @@ function airportOnClick(routeGraph, projector, airport){
 			console.log("request error");
 		}
 	});
+}
+
+function handleDrawingBarCarrier(airport){
 	$.ajax({
 		url: "http://127.0.0.1:5000/delayed-carrier/"+airport.ORIGIN,
 		success: function(response){
@@ -72,21 +75,36 @@ function airportOnClick(routeGraph, projector, airport){
 			var percentage_delays = [];
 			for (delayed_carrier of delayed_carriers){
 				carrier_names.push(delayed_carrier.carrier_name);
-				percentage_delays.push(delayed_carrier.pct_delay_flight);
+				percentage_delays.push(delayed_carrier.pct_delay_flight.toFixed(4));
 			}
 
 			var graph_data = [{
+		   		type: 'bar',
 		   		x: carrier_names,
-		  		y: percentage_delays,
-			  	type: 'bar'
+		  		y: percentage_delays
 			}];
 
-			Plotly.react('carrier-bar', graph_data);
+			var layout = {
+				title: airport.ORIGIN + ", " + airport.origin_city,
+				yaxis: {
+					title: {
+						text: "% delayed flight"
+					},
+					tickformat: '%',
+				}
+			}
+
+			Plotly.react('carrier-bar', graph_data, layout);
 		},
 		error: function(response){
 			console.log("request error");
 		}
 	});
+}
+
+function airportOnClick(routeGraph, projector, airport){
+	handleDrawingRoute(routeGraph, projector, airport);
+	handleDrawingBarCarrier(airport);
 }
 
 function displayTooltip(item){

@@ -1,3 +1,18 @@
+#map {
+	width: 60%;
+	float: left;
+}
+
+#carrier-bar {
+	width: 39%;
+	float: left;
+}
+
+.max-width {
+	width: 100%;
+	float: left;
+}
+
 .state {
 	fill: #EEE;
 	stroke: #FFF;
