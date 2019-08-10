@@ -65,6 +65,28 @@ d3.csv("http://127.0.0.1:5000/static/origin_delay.csv").then(function(data){
 		.on("click", function(item){ airportOnClick(routeGraph, projection, item);})
 		.on("mouseover", function(item){ displayTooltip(item); })
 		.on("mouseout", function(item){ hideTooltip() });
+
+	// add legend
+	var mapLegend = d3.select("svg#map-legend");
+	mapLegend.append("circle")
+		.attr("cx", 8)
+		.attr("cy", 8)
+		.attr("r", "8px")
+		.attr('class', 'airport');
+	mapLegend.append("text")
+		.attr("x", 20)
+		.attr("y", 12)
+		.text(": Total delayed flights > " + avg_delay_flights);
+
+	mapLegend.append("circle")
+		.attr("cx", 8)
+		.attr("cy", 40)
+		.attr("r", "3px")
+		.attr('class', 'airport');
+	mapLegend.append("text")
+		.attr("x", 20)
+		.attr("y", 44)
+		.text(": Total delayed flights <= " + avg_delay_flights);
 });
 
 function getProjectedPoint(projector, airport){

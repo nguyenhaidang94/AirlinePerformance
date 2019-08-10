@@ -3,7 +3,14 @@
 	float: left;
 }
 
+#map-legend {
+	margin-top: 10px;
+	width: 225px;
+	height: 48px;
+}
+
 #carrier-bar {
+	margin-top: 100px;
 	width: 39%;
 	float: left;
 }
