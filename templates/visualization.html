@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Visualization</title>
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script src="https://d3js.org/d3-selection.v1.min.js"></script>
@@ -19,16 +20,23 @@
   <script src="//unpkg.com/sunburst-chart"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
-
+  <link rel="stylesheet" href="{{url_for('static', filename='autocomplete.css')}}">
 	<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
   <link rel="stylesheet" href="{{url_for('static', filename='bar.css')}}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 
 </head>
 
 <body>
+
 	<h1>Visualization</h1>
-	<a href="{{url_for('home')}}">back</a>
+  <a href="{{url_for('home')}}">back</a>
+
+
   <div class="max-width">
   	<div id="map-graph">
   		<div class="max-width" style="text-align: center;">
@@ -45,6 +53,31 @@
   	<div id="carrier-bar"></div>
   </div>
 	<script src="{{url_for('static', filename='draw.js')}}"></script>
+  <br>
+  <br>
+  <p>Predict for flight</p>
+
+  <div id="predict">
+
+      <form class="form-inline" action="/visualization" method="post">
+        <label for="depature">Enter Depature:</label>
+        <div class="autocomplete" style="width:300px;">
+          <input id="depature" type="text" name="myDepature" placeholder="Depature">
+        </div>
+        <label for="arrive">Enter Arrive:</label>
+        <div class="autocomplete" style="width:300px;">
+          <input id="arrive" type="text" name="myArrive" placeholder="Arrive">
+        </div>
+        <label for="date">Enter date:</label>
+        <input type="date" id="date"  name="date">
+        <input type="submit" value="Submit">
+      </form>
+  </div>
+  <script src="{{url_for('static', filename='autocomplete.js')}}"></script>
+  <!-- <script src="{{url_for('static', filename='dropdownlist.js')}}"></script> -->
+
+  <br>
+  <br>
   <div id = "mydiv">
     <div>
       <label for="bchart">Select barchart</label>
@@ -59,6 +92,7 @@
   <script src="{{url_for('static', filename='bar_group.js')}}"></script>
   <div id = "sunburst"></div>
   <script src="{{url_for('static', filename='sunburst.js')}}"></script>
+
 
 </body>
 

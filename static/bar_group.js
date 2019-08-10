@@ -9,9 +9,9 @@
          var link_data = "http://127.0.0.1:5000/static/groupbarchart.json";
          // some effects have required parameters
          if ( selectedChart === "CARRIER" ) {
-           link_data = "http://127.0.0.1:5000/static/groupbarchart.json";
+           link_data = "http://127.0.0.1:5000/static/carrier.json";
          } else if ( selectedChart === "AIRPORT" ) {
-           link_data = "http://127.0.0.1:5000/static/groupbarchart.json";
+           link_data = "http://127.0.0.1:5000/static/airport_bc.json";
          }
          else if (selectedChart === "CITY"){
            link_data = "http://127.0.0.1:5000/static/groupbarchart.json";
@@ -40,17 +40,17 @@
         d3.json(link, function(d) {
           return {
                 DAY_OF_WEEK: d.DAY_OF_WEEK,
-                OP_UNIQUE_CARRIER: d.OP_UNIQUE_CARRIER,
+                NAME: d.NAME,
                 delay_time: +d.delay_time,
                 type :d.type
           };
         }).then(function(rows) {
-          console.log(rows);
           render(rows);
         });
       }
 
     draw("http://127.0.0.1:5000/static/groupbarchart.json");
+
 
 
 
@@ -158,7 +158,7 @@
                                         .attr("height", function(d) { return height - y(2);})
                                         .on("mouseover", function(d) {
                                             d3.select(this).style("fill", d3.rgb(color(d.type)).darker(2));
-                                            tooltip.text("Delay time: " + d.delay_time+" minutes")
+                                            tooltip.text("Delay time: " + d.delay_time.toFixed(2)+" minutes")
                                                     .style("visibility", "visible")
                                                     .style("left", (d3.event.pageX) + "px")
                                                 		.style("top", (d3.event.pageY - 10) + "px");;
@@ -168,9 +168,9 @@
                                                 tooltip.style("visibility", "hidden") ;
                                                 }))
                 .call((parent)=>parent.append("text")
-                .text(function(d){return d.OP_UNIQUE_CARRIER})
+                .text(function(d){return d.NAME})
                 .attr("x", function(d, i) {
-                  return x1(d.type) + 20;
+                  return x1(d.type) + 15;
                   })
                   )
                   ;
@@ -198,13 +198,13 @@
                 .style("opacity","0");
 
             legend.append("rect")
-                .attr("x", width - 18)
+                .attr("x", width + 40)
                 .attr("width", 18)
                 .attr("height", 18)
                 .style("fill", function(d) { return color(d); });
 
             legend.append("text")
-                .attr("x", width - 24)
+                .attr("x", width +30)
                 .attr("y", 9)
                 .attr("dy", ".35em")
                 .style("text-anchor", "end")

@@ -1,4 +1,6 @@
 from flask import Flask, render_template, url_for, request, json, Response
+import pandas as pd
+import numpy as np
 from utils import *
 
 ALLOWED_EXTENSIONS = {'csv'}
@@ -13,9 +15,30 @@ app = Flask(__name__)
 def home():
 	return render_template("index.html")
 
-@app.route("/visualization")
+@app.route("/visualization",methods=["GET", "POST"])
 def visualize():
-	return render_template("visualization.html")
+	if request.method =="GET":
+		return render_template("visualization.html")
+	else:
+		dep = request.form["myDepature"]
+		arr = request.form["myArrive"]
+		date = request.form["date"]
+		## test data is dataframe
+		test_data = query_data(dep,arr,date)
+		model,encoder = load_model()
+		if len(test_data) == 0:
+			return '''<h1>The data is: {}</h1>'''.format(date)
+		elif(len(test_data)>1):
+			test_data['ranking'] = predict(test_data,encoder,model)
+			test_data = test_data.sort_values(by='ranking',ascending=True).reset_index()
+
+		result = test_data.head(5)[['OP_UNIQUE_CARRIER',"FL_DATE"]]
+
+		return '''<h1>The data is: {}</h1>'''.format(result.to_string())
+
+
+
+
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -53,7 +76,7 @@ def get_delayed_airport():
 	origin_delay_data["origin_city"] = origin_delay_data.index.to_series().apply(find_city, args=(airport_info,))
 	origin_delay_data[origin_lat_col] = origin_delay_data.index.to_series().apply(find_latitude, args=(airport_info,))
 	origin_delay_data[origin_long_col] = origin_delay_data.index.to_series().apply(find_longitute, args=(airport_info,))
-	
+
 	return origin_delay_data
 
 @app.route("/delayed-route/<airportCode>", methods=["GET"])
@@ -64,7 +87,7 @@ def get_delayed_route(airportCode):
 	data = airport_delay_data.loc[airport_delay_data[origin_col] == airportCode, used_columns].groupby(by=dest_col).sum().sort_values(by=dep_delay_new_col, ascending=False)[0:n_top]
 	data[origin_lat_col] = data.index.to_series().apply(find_latitude, args=(airport_info,))
 	data[origin_long_col] = data.index.to_series().apply(find_longitute, args=(airport_info,))
-	
+
 	json_string = data.to_json(orient="records")
 	resp = Response(json_string, status=200, mimetype='application/json')
 	return resp
