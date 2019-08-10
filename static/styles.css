@@ -3,8 +3,15 @@
 	float: left;
 }
 
+#airport-selection-wrapper {
+	float: left;
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 12px;
+    margin-left: 100px;
+}
+
 #map-legend {
-	margin-top: 10px;
 	width: 225px;
 	height: 48px;
 }
@@ -23,6 +30,11 @@
 .state {
 	fill: #EEE;
 	stroke: #FFF;
+}
+
+.map-title {
+	font-size: x-large;
+    font-weight: bold;
 }
 
 .airport {
