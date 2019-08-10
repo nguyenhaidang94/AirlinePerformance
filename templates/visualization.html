@@ -18,9 +18,11 @@
   <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
   <script src="//unpkg.com/sunburst-chart"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 
 	<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
   <link rel="stylesheet" href="{{url_for('static', filename='bar.css')}}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
 
 </head>
 
@@ -28,8 +30,16 @@
 	<h1>Visualization</h1>
 	<a href="{{url_for('home')}}">back</a>
   <div class="max-width">
-      <div id="map"></div>
-      <div id="carrier-bar"></div>
+  	<div id="map-graph">
+  		<div class="max-width">
+  			<label for="airportSelection">Select airport:</label>
+  			<select id="airportSelection">
+  				<option value="">Select</option>
+  			</select>
+  		</div>
+  		<div id="map" class="max-width"></div>
+  	</div>
+  	<div id="carrier-bar"></div>
   </div>
 	<script src="{{url_for('static', filename='draw.js')}}"></script>
   <div id = "mydiv">
