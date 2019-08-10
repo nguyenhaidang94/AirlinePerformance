@@ -73,17 +73,24 @@ function handleDrawingBarCarrier(airport){
 			var delayed_carriers = response;
 			carrier_names = []
 			var percentage_delays = [];
+			var percentage_delays_display = [];
 			for (delayed_carrier of delayed_carriers){
 				carrier_names.push(delayed_carrier.carrier_name);
-				percentage_delays.push(delayed_carrier.pct_delay_flight.toFixed(4));
+				percentage_delays.push(delayed_carrier.pct_delay_flight);
+				percentage_delays_display.push((delayed_carrier.pct_delay_flight*100).toFixed(0));
 			}
-
-			var graph_data = [{
+			var graphData = [{
 		   		type: 'bar',
 		   		x: carrier_names,
-		  		y: percentage_delays
+		  		y: percentage_delays,
+		  		text: percentage_delays_display.map(String),
+		  		textposition: 'auto'
 			}];
 
+			var barGap = 0.1;
+			if (delayed_carriers.length < 5){
+				barGap = 0.7;
+			}
 			var layout = {
 				title: airport.ORIGIN + ", " + airport.origin_city,
 				yaxis: {
@@ -91,10 +98,11 @@ function handleDrawingBarCarrier(airport){
 						text: "% delayed flight"
 					},
 					tickformat: '%',
-				}
+				},
+				bargap: barGap
 			}
 
-			Plotly.react('carrier-bar', graph_data, layout);
+			Plotly.react('carrier-bar', graphData, layout);
 		},
 		error: function(response){
 			console.log("request error");
