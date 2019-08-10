@@ -51,31 +51,25 @@
       }
 
     draw("http://127.0.0.1:5000/static/groupbarchart.json");
-    function displayTooltip(item){
-    	tooltip.transition().duration(200);
-    	tooltip.html(
-    				 "Delay time: " + item.delay_time + " minutes"
-    				)
-    		.style("opacity", 0.9)
-    		.style("left", (d3.event.pageX - 10) + "px")
-    		.style("top", (d3.event.pageY - 64) + "px");
-    }
 
-    function hideTooltip(){
-    	tooltip.transition().duration(200)
-    		.style("opacity", 0);
-    }
+
+
 
     function render(data) {
 
-      var margin = {top: 20, right: 20, bottom: 30, left: 40},
+      var margin = {top: 50, right: 20, bottom: 50, left: 100},
           width = 960 - margin.left - margin.right,
           height = 500 - margin.top - margin.bottom;
 
 
-      var tooltip = d3.select("div#mydiv").append("div")
-      	.attr("class", "tooltip")
-      	.style("opacity", 0);
+
+      var tooltip = d3.select("div#mydiv")
+          	.append("div")
+          	.style("position", "absolute")
+          	.style("z-index", "10")
+          	.style("visibility", "hidden")
+            .style("font-family", "sans-serif")
+            .style("background-color","white");
 
       var x0 =  d3.scaleBand()
           .rangeRound([0, width])
@@ -96,9 +90,9 @@
           .range(["#ca0020","#0571b0"]);
 
       var svg2 = d3.select('div#mydiv').append("svg:svg")
-          .attr("width", width + margin.left + margin.right)
+          .attr("width", width + margin.left + margin.right + 70)
           .attr("height", height + margin.top + margin.bottom)
-        .append("g")
+          .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
@@ -119,7 +113,16 @@
             svg2.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + height + ")")
-                .call(xAxis);
+                .call(xAxis)
+                .append("text")
+                .attr("x",width+50)
+                .attr("y",7)
+                .attr("dy", ".71em")
+                .attr("fill","black")
+                .attr("font-size","12px")
+                .style("text-anchor", "end")
+                .style('font-weight','bold')
+                .text("Day of Week");
 
             svg2.append("g")
                 .attr("class", "y axis")
@@ -127,13 +130,13 @@
                 .call(yAxis)
                 .append("text")
                 .attr("transform", "rotate(-90)")
-                .attr("y", 6)
+                .attr("x",0)
                 .attr("dy", ".71em")
-                .attr("color","black")
+                .attr("fill","black")
                 .attr("font-size","12px")
                 .style("text-anchor", "end")
                 .style('font-weight','bold')
-                .text("Minute");
+                .text("Minutes");
 
             svg2.select('.y').transition().duration(500).delay(1300).style('opacity','1');
 
@@ -155,11 +158,14 @@
                                         .attr("height", function(d) { return height - y(2);})
                                         .on("mouseover", function(d) {
                                             d3.select(this).style("fill", d3.rgb(color(d.type)).darker(2));
-                                             displayTooltip(d);
+                                            tooltip.text("Delay time: " + d.delay_time+" minutes")
+                                                    .style("visibility", "visible")
+                                                    .style("left", (d3.event.pageX) + "px")
+                                                		.style("top", (d3.event.pageY - 10) + "px");;
                                                 })
                                         .on("mouseout", function(d) {
                                                 d3.select(this).style("fill", color(d.type));
-                                                hideTooltip() ;
+                                                tooltip.style("visibility", "hidden") ;
                                                 }))
                 .call((parent)=>parent.append("text")
                 .text(function(d){return d.OP_UNIQUE_CARRIER})
