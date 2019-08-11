@@ -1,42 +1,42 @@
-// jquery for control
-    $( function() {
-       // run the currently selected effect
-       function redraw() {
-         // get effect type from
-         var selectedChart = $( "#barchart" ).val();
+// // jquery for control
+//     $( function() {
+//        // run the currently selected effect
+//        function redraw() {
+//          // get effect type from
+//          var selectedChart = $( "#barchart" ).val();
+//
+//          // Most effect types need no options passed by default
+//          var link_data = "http://127.0.0.1:5000/static/groupbarchart.json";
+//          // some effects have required parameters
+//          if ( selectedChart === "CARRIER" ) {
+//            link_data = "http://127.0.0.1:5000/static/carrier.json";
+//          } else if ( selectedChart === "AIRPORT" ) {
+//            link_data = "http://127.0.0.1:5000/static/airport_bc.json";
+//          }
+//          else if (selectedChart === "CITY"){
+//            link_data = "http://127.0.0.1:5000/static/groupbarchart.json";
+//          }
+//
+//          // Remove svg
+//          var div = document.getElementById("mydiv");
+//          var remove_children = div.childNodes;
+//          //remove the current chart
+//          div.removeChild(remove_children[remove_children.length -1]);
+//          // redraw
+//          draw(link_data);
+//
+//        };
+//
+//        // Redraw when hit button
+//        $( "#button" ).on( "click", function() {
+//          redraw();
+//        });
+//
+//      } );
 
-         // Most effect types need no options passed by default
-         var link_data = "http://127.0.0.1:5000/static/groupbarchart.json";
-         // some effects have required parameters
-         if ( selectedChart === "CARRIER" ) {
-           link_data = "http://127.0.0.1:5000/static/carrier.json";
-         } else if ( selectedChart === "AIRPORT" ) {
-           link_data = "http://127.0.0.1:5000/static/airport_bc.json";
-         }
-         else if (selectedChart === "CITY"){
-           link_data = "http://127.0.0.1:5000/static/groupbarchart.json";
-         }
-
-         // Remove svg
-         var div = document.getElementById("mydiv");
-         var remove_children = div.childNodes;
-         //remove the current chart
-         div.removeChild(remove_children[remove_children.length -1]);
-         // redraw
-         draw(link_data);
-
-       };
-
-       // Redraw when hit button
-       $( "#button" ).on( "click", function() {
-         redraw();
-       });
-
-     } );
 
 
-
-    function draw(link){
+    function draw(link,text){
         d3.json(link, function(d) {
           return {
                 DAY_OF_WEEK: d.DAY_OF_WEEK,
@@ -45,19 +45,19 @@
                 type :d.type
           };
         }).then(function(rows) {
-          render(rows);
+          render(rows,text);
         });
       }
 
-    draw("http://127.0.0.1:5000/static/groupbarchart.json");
+    draw("http://127.0.0.1:5000/static/carrier.json","Carrier");
+    draw("http://127.0.0.1:5000/static/airport_bc.json","Airport");
 
 
 
 
+    function render(data,text) {
 
-    function render(data) {
-
-      var margin = {top: 50, right: 20, bottom: 50, left: 100},
+      var margin = {top: 50, right: 20, bottom: 60, left: 100},
           width = 960 - margin.left - margin.right,
           height = 500 - margin.top - margin.bottom;
 
@@ -93,7 +93,16 @@
           .attr("width", width + margin.left + margin.right + 70)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+          .attr("transform", "translate(" + margin.left  + "," + margin.top + ")");
+
+          svg2.append("text")
+              .attr("class", "title")
+              .attr("x", width/2)
+              .attr("y", height + (margin.bottom/2 ))
+              .attr("dy", "1.35em")
+              .attr("font-weight","bold")
+              .attr("text-anchor", "middle")
+              .text("Barchart shows the delay time according " + text + " in the day of week");
 
 
 

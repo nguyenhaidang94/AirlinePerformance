@@ -77,18 +77,15 @@
   <br>
   <br>
   <div id = "mydiv">
-    <div>
-      <label for="bchart">Select barchart</label>
-      <select name="bchart" id="barchart">
-        <option>CARRIER</option>
-        <option>AIRPORT</option>
-        <option selected="selected">CITY</option>
-      </select>
-      <button id="button">plot</button>
-    </div>
+    <h1>Barchart for mean delaytime in day of week</h1>
   </div>
   <script src="{{url_for('static', filename='bar_group.js')}}"></script>
-  <div id = "sunburst"></div>
+  <br>
+  <br>
+  <br>
+  <div id = "sunburst">
+    <h1>Sunburst chart for total delay flight</h1>
+  </div>
   <script src="{{url_for('static', filename='sunburst.js')}}"></script>
 
 
