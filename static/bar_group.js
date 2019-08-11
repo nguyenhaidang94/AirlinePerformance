@@ -133,6 +133,7 @@
                 .style('font-weight','bold')
                 .text("Day of Week");
 
+
             svg2.append("g")
                 .attr("class", "y axis")
                 .style('opacity','0')
