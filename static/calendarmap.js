@@ -74,10 +74,13 @@ d3.csv("http://127.0.0.1:5000/static/data.csv").then( function( csv) {
   //   //.rollup(function(d) { return  Math.sqrt(d[0].DEP_DEL15 / DEP_DEL15_Max); })
   //   .rollup(function(d) { return  d[0].DEP_DEL15; })
   //   .map(csv);
+  let global_d
+
+
 
   var rect = svg.selectAll(".day")
       .data(csv)
-      //.data(function(d) { return d3.timeDay(new Date(d, 0, 1), new Date(d+1, 0, 1)); })
+    //  .data(function(d) { return d3.timeDay(new Date(d, 0, 1), new Date(d+1, 0, 1)); })
       .enter()
   	  .append("rect")
       .attr("class", "day")
@@ -86,16 +89,32 @@ d3.csv("http://127.0.0.1:5000/static/data.csv").then( function( csv) {
       .attr("x", function(d) { return week(timeparse(d.FL_DATE)) * cellSize; })
       .attr("y", function(d) { return day(timeparse(d.FL_DATE)) * cellSize; })
       .attr("fill",'#fff')
-      .attr("fill", function(d) { return color(d.DEP_DEL15); })
-      .on("mouseover", function(d){ displayTooltip(d.FL_DATE,d.DEP_DEL15); })
+      .attr("fill", function(d) { return color(d);})
+      .on("mouseover", function(d){displayTooltip_calendar(d); })
       .on("mouseout", function(d){ hideTooltip() })
       .datum(format);
 
+      // var data = d3.nest()
+      //   .key(function(d) { return d.FL_DATE; })
+      //   //.rollup(function(d) { return  Math.sqrt(d[0].Comparison_Type / Comparison_Type_Max); })
+      //   .rollup(function(d) { return  d[0].DEP_DEL15; })
+      //   .map(csv);
+      //
+      //
+      //
+      // rect.filter(function(d) { return d in data; })
+      //     .attr("fill", function(d) { return color(d);})
+       // .on("mouseover", function(d){
+       //   displayTooltip_calendar(d); })
+       // .on("mouseout", function(d){ hideTooltip() })
+      //     .attr("fill", function(d) { return color(data[d]); })
+    	//     .attr("data-title", function(d) { return "value : "+Math.round(data[d])});
+    	// $("rect").tooltip({container: 'body', html: true, placement:'top'});
 
-  // rect.filter(function(d) { return d in csv; })
+   //rect.filter(function(d) { return d in csv; })
   //     .attr("fill", function(d) { return color(d.DEP_DEL15); })
 	//     //.attr("data-title", function(d) { return "value : " + Math.round(data[d])})
-  //     .on("mouseover", function(d){ displayTooltip(d,data[d]); })
+  //     .on("mouseover", function(d){ displayTooltip(d.FL_DATE,d.DEP_DEL15); })
   //     .on("mouseout", function(d){ hideTooltip() });
 
 	//$("rect").tooltip({container: 'body', html: true, placement:'top'});
@@ -126,10 +145,10 @@ function monthPath(t0) {
       + "H" + (w1 + 1) * cellSize + "V" + 0
       + "H" + (w0 + 1) * cellSize + "Z";
 }
-function displayTooltip(d,value){
+function displayTooltip_calendar(d){
   tooltip.transition().duration(200);
-  tooltip.html('Date: ' + d + "<br>"
-       + "Delay Percentage: "+ value.toFixed(2) + "<br>")
+  tooltip.html('Date: ' + d.FL_DATE + "<br>"
+       + "Delay Percentage: "+ d.DEP_DEL15.toFixed(2) + "<br>")
       //+ "Delayed flights: " + parseFloat(item.pct_delay_flight).toFixed(2) + "%" + "<br>"
       //+ "Average delay: " + parseFloat(item.avg_delay).toFixed(0) + " minutes")
   .style("opacity", 0.9)
@@ -143,16 +162,16 @@ function hideTooltip(){
 }
 
 function color(d) {
-  if (d<10){
+  if (d.DEP_DEL15<10){
     return '#a8eb91';
   }
-  if(d >= 10 && d < 15){
+  if(d.DEP_DEL15 >= 10 && d.DEP_DEL15 < 15){
     return '#d6a774';
   }
-  if(d >= 15 && d < 20){
+  if(d.DEP_DEL15 >= 15 && d.DEP_DEL15 < 20){
     return '#c46f56'
   }
-  if(d>=20){
+  if(d.DEP_DEL15>=20){
     return '#c75858';
   }
 }
