@@ -153,7 +153,7 @@ def ranking(arr):
 	temp = array.argsort()
 	ranks = np.empty_like(temp)
 	ranks[temp] = np.arange(len(array))
-	return
+	return ranks
 
 def prepare_data_predict(data,encoder,onehot_features,con_features):
 	cat_data = encoder.transform(data[onehot_features]).toarray()
