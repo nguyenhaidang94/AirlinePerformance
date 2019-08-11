@@ -12,6 +12,7 @@ ORIGIN_CARRIER_DELAY_FILE_PATH = "data/origin_carrier_delay.csv"
 
 ORIGIN_DELAY_FILE_PATH = "static/origin_delay.csv"
 FLIGHT_TIMESERIES_FILE_PATH = "static/flight-timeseries.csv"
+CARRIER_DELAY_FILE_PATH = "static/carrier_delay.csv"
 
 AIRPORT_FILE_PATH = "data/airport_location.csv"
 UNIQUE_CARRIER_FILE_PATH = "data/unique_carriers.csv"
@@ -110,6 +111,19 @@ def process_flight_timeseries(full_data):
 	data["n_flights"] = 1
 	flight_timeseries = data.groupby(by="FL_DATE").sum()
 	flight_timeseries.to_csv(FLIGHT_TIMESERIES_FILE_PATH)
+
+def process_carrier_delay(full_data):
+	used_columns = ["OP_UNIQUE_CARRIER", "DEP_DEL15", "DEP_DELAY_NEW"]
+	data = full_data[used_columns]
+	data["n_flights"] = 1
+	carrier_delay = data.groupby(by="OP_UNIQUE_CARRIER").sum()
+	carrier_delay["pct_delay_flight"] = carrier_delay["DEP_DEL15"]/carrier_delay["n_flights"]*100
+	carrier_delay["avg_delay"] = carrier_delay["DEP_DELAY_NEW"]/carrier_delay["n_flights"]
+	carrier_delay.sort_values(by="n_flights", ascending=False, inplace=True)
+
+	unique_carrier = load_unique_carrier()
+	carrier_delay["carrier_name"] = carrier_delay.index.to_series().apply(find_carrier_name, args=(unique_carrier,))
+	carrier_delay.to_csv(CARRIER_DELAY_FILE_PATH)
 
 def load_data():
 	return pd.read_csv(DATA_FILE_PATH)
