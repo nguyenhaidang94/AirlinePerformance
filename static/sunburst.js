@@ -1,4 +1,4 @@
-d3.json("http://127.0.0.1:5000/static/sunbusrt_data.json", function(d) {
+d3.json("http://127.0.0.1:5000/static/sunburst_data.json", function(d) {
   return {
         DAY_OF_WEEK:  d.DAY_OF_WEEK,
         OP_UNIQUE_CARRIER: d.OP_UNIQUE_CARRIER,
