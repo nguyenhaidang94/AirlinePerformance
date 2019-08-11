@@ -36,6 +36,8 @@
 }
 
 .map-title {
+	text-align: center;
+	display: block;
 	font-size: x-large;
     font-weight: bold;
 }
