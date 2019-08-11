@@ -33,22 +33,24 @@ $("#airportSelection").change(function(){
 var airportGraph = svg.append("g");
 var routeGraph = svg.append("g");
 d3.csv("http://127.0.0.1:5000/static/origin_delay.csv").then(function(data){
-	var min_delay_flights = Number.MAX_SAFE_INTEGER;
-	var max_delay_flights = 0;
+	var minDelayFlights = Number.MAX_SAFE_INTEGER;
+	var maxDelayFlights = 0;
 	var airportSelectionData = [{id:"", text:"Select"}]; // data for airport selection
 	for (airport of data){
-		var delay_flights = parseInt(airport.DEP_DEL15);
-		if (delay_flights < min_delay_flights){
-			min_delay_flights = delay_flights;
+		var delayFlights = parseInt(airport.DEP_DEL15);
+		if (delayFlights < minDelayFlights){
+			minDelayFlights = delayFlights;
 		}
-		if (delay_flights > max_delay_flights){
-			max_delay_flights = delay_flights;
+		if (delayFlights > maxDelayFlights){
+			maxDelayFlights = delayFlights;
 		}
 
 		// push data to airport selection
 		airportSelectionData.push({id: airport.ORIGIN, text: airport.origin_city + ", " + airport.ORIGIN});
 	}
-	var avg_delay_flights = (max_delay_flights - min_delay_flights)/2;
+	var range = maxDelayFlights - minDelayFlights;
+	var firstBound = minDelayFlights + range*0.33;
+	var secondBound = minDelayFlights + range*0.66;
    	
 	// load data for airport selection
 	$("#airportSelection").select2({data: airportSelectionData});
@@ -60,7 +62,7 @@ d3.csv("http://127.0.0.1:5000/static/origin_delay.csv").then(function(data){
 		.attr('cx', function (item) { return getProjectedPoint(projection, item)[0]; })
 		.attr('cy', function (item) { return getProjectedPoint(projection, item)[1]; })
 		.attr('name', function (item) { return item.ORIGIN; })
-		.attr('r', function (item) {return getAirportLevel(parseInt(item.DEP_DEL15), avg_delay_flights); })
+		.attr('r', function (item) {return getAirportLevel(parseInt(item.DEP_DEL15), firstBound, secondBound); })
 		.attr('class', 'airport')
 		.on("click", function(item){ airportOnClick(routeGraph, projection, item);})
 		.on("mouseover", function(item){ displayTooltip(item); })
@@ -76,17 +78,27 @@ d3.csv("http://127.0.0.1:5000/static/origin_delay.csv").then(function(data){
 	mapLegend.append("text")
 		.attr("x", 20)
 		.attr("y", 12)
-		.text(": Total delayed flights > " + avg_delay_flights);
+		.text(": Total delayed flights > " + secondBound.toFixed(0));
 
 	mapLegend.append("circle")
 		.attr("cx", 8)
-		.attr("cy", 40)
+		.attr("cy", 36)
+		.attr("r", "5px")
+		.attr('class', 'airport');
+	mapLegend.append("text")
+		.attr("x", 20)
+		.attr("y", 40)
+		.text(": " + firstBound.toFixed(0) + " < Delayed flights < " + secondBound.toFixed(0));
+
+	mapLegend.append("circle")
+		.attr("cx", 8)
+		.attr("cy", 64)
 		.attr("r", "3px")
 		.attr('class', 'airport');
 	mapLegend.append("text")
 		.attr("x", 20)
-		.attr("y", 44)
-		.text(": Total delayed flights <= " + avg_delay_flights);
+		.attr("y", 66)
+		.text(": Total delayed flights < " + firstBound.toFixed(0));
 });
 
 function getProjectedPoint(projector, airport){
@@ -197,9 +209,11 @@ function hideTooltip(){
 		.style("opacity", 0);
 }
 
-function getAirportLevel(delay_flights, avg_delay_flights){
-	if (delay_flights > avg_delay_flights){
+function getAirportLevel(delayFlights, firstBound, secondBound){
+	if (delayFlights > secondBound){
 		return "8px";
+	} else if (delayFlights > firstBound){
+		return "5px";
 	}
 	return "3px";
 }

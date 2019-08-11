@@ -5,7 +5,7 @@
 
 #airport-selection-wrapper {
     float: left;
-    margin-top: 15px;
+    margin-top: 30px;
     margin-left: 100px;
 }
 
@@ -16,7 +16,7 @@
 
 #map-legend {
 	width: 300px;
-	height: 48px;
+	height: 70px;
 }
 
 #carrier-bar {
