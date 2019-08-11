@@ -188,7 +188,7 @@ function displayTooltip(item){
 				+ "Delayed flights: " + parseFloat(item.pct_delay_flight).toFixed(2) + "%" + "<br>"
 				+ "Average delay: " + parseFloat(item.avg_delay).toFixed(0) + " minutes")
 		.style("opacity", 0.9)
-		.style("left", (d3.event.pageX) + "px")
+		.style("left", (d3.event.pageX - 90) + "px")
 		.style("top", (d3.event.pageY - 64) + "px");
 }
 
