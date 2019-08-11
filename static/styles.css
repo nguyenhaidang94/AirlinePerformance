@@ -25,6 +25,10 @@
 	float: left;
 }
 
+#flight-timeseries {
+	width: 50%;
+}
+
 .max-width {
 	width: 100%;
 	float: left;

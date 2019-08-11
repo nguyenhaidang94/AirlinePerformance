@@ -8,10 +8,14 @@ import numpy as np
 
 DATA_FILE_PATH = "data/data.csv"
 AIRPORT_DELAY_FILE_PATH = "data/airport_delay.csv"
-ORIGIN_DELAY_FILE_PATH = "static/origin_delay.csv"
-AIRPORT_FILE_PATH = "data/airport_location.csv"
 ORIGIN_CARRIER_DELAY_FILE_PATH = "data/origin_carrier_delay.csv"
+
+ORIGIN_DELAY_FILE_PATH = "static/origin_delay.csv"
+FLIGHT_TIMESERIES_FILE_PATH = "static/flight-timeseries.csv"
+
+AIRPORT_FILE_PATH = "data/airport_location.csv"
 UNIQUE_CARRIER_FILE_PATH = "data/unique_carriers.csv"
+
 
 origin_col = "ORIGIN"
 dest_col = "DEST"
@@ -99,6 +103,13 @@ def process_origin_delay(delay_data, airport_info):
 def process_origin_carrier_delay(data):
 	used_columns = [origin_col, "OP_UNIQUE_CARRIER", dep_delay_15_col]
 	data[used_columns].to_csv(ORIGIN_CARRIER_DELAY_FILE_PATH)
+
+def process_flight_timeseries(full_data):
+	used_columns = ["FL_DATE", "DEP_DEL15"]
+	data = full_data[used_columns]
+	data["n_flights"] = 1
+	flight_timeseries = data.groupby(by="FL_DATE").sum()
+	flight_timeseries.to_csv(FLIGHT_TIMESERIES_FILE_PATH)
 
 def load_data():
 	return pd.read_csv(DATA_FILE_PATH)

@@ -5,9 +5,7 @@ from utils import *
 
 ALLOWED_EXTENSIONS = {'csv'}
 
-
 airport_info = load_airport_data()
-airport_delay_data = load_delay_data()
 
 app = Flask(__name__)
 
@@ -36,10 +34,6 @@ def visualize():
 
 		return '''<h1>The data is: {}</h1>'''.format(result.to_string())
 
-
-
-
-
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -58,29 +52,16 @@ def import_data():
 		airport_delay_data.to_csv(AIRPORT_DELAY_FILE_PATH)
 
 		process_origin_delay(airport_delay_data, airport_info)
-		airport_delay_data = load_delay_data()
+		# airport_delay_data = load_delay_data()
 
 		process_origin_carrier_delay(data)
+		process_flight_timeseries(data)
 
 		return render_template("upload_success.html")
 
-def get_delayed_airport():
-	#airport_delay_data = load_delay_data()
-	used_columns = [origin_col, dest_col, dep_delay_new_col, dep_delay_15_col]
-	data = airport_delay_data[used_columns]
-	data[n_flights_col] = 1
-	origin_delay_data = data.groupby(by=origin_col).sum()
-	origin_delay_data["avg_delay"] = origin_delay_data[dep_delay_new_col]/origin_delay_data[n_flights_col]
-	origin_delay_data["pct_delay_flight"] = origin_delay_data[dep_delay_15_col]/origin_delay_data[n_flights_col]*100
-
-	origin_delay_data["origin_city"] = origin_delay_data.index.to_series().apply(find_city, args=(airport_info,))
-	origin_delay_data[origin_lat_col] = origin_delay_data.index.to_series().apply(find_latitude, args=(airport_info,))
-	origin_delay_data[origin_long_col] = origin_delay_data.index.to_series().apply(find_longitute, args=(airport_info,))
-
-	return origin_delay_data
-
 @app.route("/delayed-route/<airportCode>", methods=["GET"])
 def get_delayed_route(airportCode):
+	airport_delay_data = load_delay_data()
 	# return top 10 destinations
 	n_top = 10
 	used_columns = [dest_col, dep_delay_new_col]
