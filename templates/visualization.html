@@ -64,9 +64,15 @@
 
 <body>
 
+<<<<<<< HEAD
 	<h1>Visualization</h1>
+=======
+	<h1>ANALYSIS OF US AIRLINE PERFORMANCE</h1>
+>>>>>>> 65d1657d9ffa43b2d40190c952da3e16a8f7dc39
   <a href="{{url_for('import_data')}}">Import data</a>
 
+  <h1 style="text-align: center;">Spatial Effect</h1>
+  <h3>Are some airports more prone to delays than others?</h3>
   <div class="max-width">
   	<div id="map-graph">
   		<div class="max-width">
@@ -86,10 +92,35 @@
   	<div id="carrier-bar"></div>
   </div>
 	<script src="{{url_for('static', filename='draw.js')}}"></script>
+  <hr>
+
+  <h1 style="text-align: center;">Temporal Effect</h1>
+  <h3>Are some time periods more prone to delays than others?</h3>
 	<div class="max-width">
 		<div id="flight-timeseries"></div>
+    <div id="flight-timeseries-description" class="paragraph">
+      <p>The total flights during the time has a weekly cycle. It can be seen clearly when zoom in. The number of flights is <b>low on Sunday, peaks on Tuesday, Friday, Saturday</b>.</p>
+      <p>The number delayed flights tends to have the same behavior.</p>
+    </div>
 	</div>
 	<script src="{{url_for('static', filename='flight-timeseries.js')}}"></script>
+<<<<<<< HEAD
+=======
+  <hr>
+
+  <h1 style="text-align: center;">Carrier Effect</h1>
+  <h3>Are some carriers more prone to delays than others?</h3>
+  <div class="max-width">
+    <div id="parallel-carrier"></div>
+    <div id="parallel-carrier-description" class="paragraph">
+      <p><b>Southwest Airlines(WN)</b> has the <b>highest flights</b>, but <b>less delay</b>. <b>Delta Airlines(DL)</b> also has a <b>high flights</b>, but <b>lowest delay</b>.</p>
+      <p>American Airlines(AA), SkyWest Airlines(OO), United Airlines(UA) have less flights, but are as delayed as Southwest Airlines.</p>
+      <p>The rest have low flights, but high delay, which should be avoided when booking.</p>
+    </div>
+  </div>
+  <script src="{{url_for('static', filename='parallel-carrier.js')}}"></script>
+  <hr>
+>>>>>>> 65d1657d9ffa43b2d40190c952da3e16a8f7dc39
   <br>
   <br>
   <p>Predict for flight</p>
