@@ -18,7 +18,7 @@ CARRIER_DELAY_FILE_PATH = "static/carrier_delay.csv"
 AIRPORT_FILE_PATH = "data/airport_location.csv"
 UNIQUE_CARRIER_FILE_PATH = "data/unique_carriers.csv"
 
-HEATMAP_CALENDAR_FILE_PATH = "data/heatmap_data.csv"
+HEATMAP_CALENDAR_FILE_PATH = "static/heatmap_data.csv"
 
 origin_col = "ORIGIN"
 dest_col = "DEST"
@@ -219,7 +219,6 @@ def process_heatmap_data(data):
 	# data = pd.read_csv(DATA_FILE_PATH)
 	data = data[['FL_DATE','DEP_DEL15','CANCELLED']]
 	data = data.drop( data[(data['CANCELLED'] == 1)].index)
-	data.drop(columns=['CANCELLED'],inplace=True)
 	data.drop(columns=['CANCELLED'],inplace=True)
 	data = (data.groupby('FL_DATE').sum()/data.groupby('FL_DATE').count()*100).reset_index(drop=False)
 	data['FL_DATE'] = pd.to_datetime(data['FL_DATE'])

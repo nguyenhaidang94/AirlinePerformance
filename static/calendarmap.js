@@ -11,7 +11,7 @@ var day = d3.timeFormat("%w"),
 	format = d3.timeFormat("%Y%m%d");
 	parseDate = d3.timeFormat("%Y%m%d").parse;
 
-var tooltip = d3.select(".calender-map").append("div")
+var heatmap_tooltip = d3.select(".calender-map").append("div")
     	.attr("class", "heatmap-tooltip")
     	.style("opacity", 0);
 
@@ -83,7 +83,7 @@ legend.append("text")
 
 var timeparse = d3.timeParse("%Y%m%d")
 
-d3.csv("http://127.0.0.1:5000/static/data.csv").then( function(csv) {
+d3.csv("http://127.0.0.1:5000/static/heatmap_data.csv").then( function(csv) {
 
   csv.forEach(function(d) {
     d.DEP_DEL15 = parseFloat(d.DEP_DEL15);
@@ -122,7 +122,7 @@ d3.csv("http://127.0.0.1:5000/static/data.csv").then( function(csv) {
         return color(data[("$" +  d)][0]);
       })
      .on("mouseover", function(d){displayTooltip_calendar(data[("$" +  d)][0]); })
-     .on("mouseout", function(d){ hideTooltip() })
+     .on("mouseout", function(d){ hideHeatmapTooltip() })
 
 	 //$("rect").tooltip({container: 'body', html: true, placement:'top'});
 });
@@ -144,8 +144,8 @@ function displayTooltip_calendar(d){
   var yyyy = date.getFullYear().toString();
   var mm = (date.getMonth()+1).toString();
   var dd  = date.getDate().toString();
-  tooltip.transition().duration(200);
-  tooltip.html('Date: ' + yyyy + '/' + mm + '/' + dd + "<br>"
+  heatmap_tooltip.transition().duration(200);
+  heatmap_tooltip.html('Date: ' + yyyy + '/' + mm + '/' + dd + "<br>"
        + "Delay Percentage: "+ d.DEP_DEL15.toFixed(2) + "<br>")
   .style("opacity", 0.9)
   .style("left", (d3.event.pageX+16) + "px")
@@ -153,8 +153,8 @@ function displayTooltip_calendar(d){
   .style("height","32px")
 }
 
-function hideTooltip(){
-	tooltip.transition().duration(200)
+function hideHeatmapTooltip(){
+	heatmap_tooltip.transition().duration(200)
 		.style("opacity", 0);
 }
 
