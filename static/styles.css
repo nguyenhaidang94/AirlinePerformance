@@ -37,7 +37,7 @@
 }
 
 #parallel-carrier {
-	width: 70%;
+	width: 100%;
 	float: left;;
 }
 
@@ -84,7 +84,7 @@
 	margin-bottom: 0px;
 }
 
-div.tooltip {	
+div.tooltip {
 	position: absolute;
 	text-align: center;
 	width: 180px;

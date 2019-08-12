@@ -12,7 +12,7 @@ body {
 }
 
 .x.axis path {
-  display: none;
+  display: nonev;
 }
 
 </style>

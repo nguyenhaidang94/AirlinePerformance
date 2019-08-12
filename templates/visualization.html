@@ -26,6 +26,8 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+  <script src="http://malsup.github.com/jquery.form.js"></script>
 
 
   <!-- calendar-heatmap -->
@@ -59,24 +61,7 @@
     .RdYlGn .q9-11{fill:rgb(26,152,80)}
     .RdYlGn .q10-11{fill:rgb(0,104,55)}
     </style>
-    <script type="text/javascript">
-      function handleOnClick(){
-        console.log("click");
-        var departure = $("#depature").val();
-        var arrive = $("#arrive").val();
-        var date = $("#date").val();
-        $.ajax({
-          url: "http://127.0.0.1:5000/prediction/" + departure + "&" + arrive + "&" + date,
-          success: function(response){
-            console.log(response);
-          },
-          error: function(response){
-            console.log("request error");
-          }
-        });
-      }
-        
-    </script>
+
 </head>
 
 <body>
@@ -144,7 +129,7 @@
 
   <div id="predict">
 
-      <!-- <form class="form-inline" action="/visualization" method="post"> -->
+      <form class="form-inline" id="myform" method="post">
         <label for="depature">Enter Depature:</label>
         <div class="autocomplete" style="width:300px;">
           <input id="depature" type="text" name="myDepature" placeholder="Depature">
@@ -155,10 +140,82 @@
         </div>
         <label for="date">Enter date:</label>
         <input type="date" id="date"  name="date">
-        <button onclick="handleOnClick()">Submit</button>
-      <!-- </form> -->
+        <input type="submit" value="Submit">
+      </form>
   </div>
+
   <script src="{{url_for('static', filename='autocomplete.js')}}"></script>
+
+  <div id ="result"></div>
+  
+  <script type="text/javascript">
+  $('#myform').submit(function () {
+       sendForm();
+       return false;
+      });
+
+    function sendForm(){
+      $.ajax({
+        type: 'POST',
+        url: "{{url_for('start_predict')}}",
+        data: $('#myform').serialize(),
+
+        success: function(response){
+          console.log(response);
+          CreateTableFromJSON(response);
+
+        },
+        error: function(response){
+          console.log("request error");
+        }
+      });
+    }
+    function CreateTableFromJSON(data) {
+
+
+        // EXTRACT VALUE FOR HTML HEADER.
+        // ('Book ID', 'Book Name', 'Category' and 'Price')
+        var col = [];
+        for (var i = 0; i < data.length; i++) {
+            for (var key in data[i]) {
+                if (col.indexOf(key) === -1) {
+                    col.push(key);
+                }
+            }
+        }
+
+        // CREATE DYNAMIC TABLE.
+        var table = document.createElement("table");
+
+
+        // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+        var tr = table.insertRow(-1);                   // TABLE ROW.
+
+        for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < data.length; i++) {
+
+            tr = table.insertRow(-1);
+
+            for (var j = 0; j < col.length; j++) {
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = data[i][col[j]];
+            }
+        };
+        var divContainer = document.getElementById("result");
+        if (divContainer.childNodes.length>0){
+          divContainer.removeChild(divContainer.childNodes[0])
+        }
+        divContainer.appendChild(table);
+      }
+
+  </script>
   <br>
   <br>
   <div id = "mydiv">

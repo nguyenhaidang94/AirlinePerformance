@@ -19,8 +19,13 @@ def visualize():
 	if request.method =="GET":
 		return render_template("visualization.html")
 
-@app.route("/prediction/<departure>&<arrive>&<date>", methods=["GET"])
-def predict(departure, arrive, date):
+@app.route("/prediction", methods=["POST"])
+def start_predict():
+
+	departure = request.form["myDepature"]
+	arrive = request.form["myArrive"]
+	date = request.form["date"]
+	print(departure,arrive,date)
 	test_data = query_data(departure, arrive, date)
 	model,encoder = load_model()
 	if len(test_data) == 0:
@@ -31,7 +36,7 @@ def predict(departure, arrive, date):
 		test_data = test_data.sort_values(by='ranking',ascending=True).reset_index()
 	result = test_data.head(5)[['OP_UNIQUE_CARRIER',"DEP_DELAY_NEW"]]
 
-	return result.to_json(orient="records")
+	return Response(result.to_json(orient="records"), status=200, mimetype='application/json')
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
