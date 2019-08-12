@@ -35,6 +35,8 @@
 	<h1>ANALYSIS OF US AIRLINE PERFORMANCE</h1>
   	<a href="{{url_for('import_data')}}">Import data</a>
 
+  <h1 style="text-align: center;">Spatial Effect</h1>
+  <h3>Are some airports more prone to delays than others?</h3>
   <div class="max-width">
   	<div id="map-graph">
   		<div class="max-width">
@@ -54,7 +56,12 @@
   	<div id="carrier-bar"></div>
   </div>
 	<script src="{{url_for('static', filename='draw.js')}}"></script>
-	<div class="max-width">
+	<hr>
+
+  <h1 style="text-align: center;">Temporal Effect</h1>
+  <h3>Are some time periods more prone to delays than others?</h3>
+  <h3>Relationships between delays and temporal factors: day of week, day of month?</h3>
+  <div class="max-width">
 		<div id="flight-timeseries"></div>
 		<div id="flight-timeseries-description" class="paragraph">
 			<p>The total flights during the time has a weekly cycle. It can be seen clearly when zoom in. The number of flights is <b>low on Sunday, peaks on Tuesday, Friday, Saturday</b>.</p>
@@ -62,6 +69,11 @@
 		</div>
 	</div>
 	<script src="{{url_for('static', filename='flight-timeseries.js')}}"></script>
+  <hr>
+
+  
+  <h1 style="text-align: center;">Carrier Effect</h1>
+  <h3>Are some carriers more prone to delays than others?</h3>
   <div class="max-width">
     <div id="parallel-carrier"></div>
     <div id="parallel-carrier-description" class="paragraph">
@@ -71,6 +83,7 @@
 	</div>
   </div>
   <script src="{{url_for('static', filename='parallel-carrier.js')}}"></script>
+  <hr>
   <br>
   <br>
   <p>Predict for flight</p>
