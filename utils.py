@@ -5,6 +5,7 @@ from sklearn.preprocessing import OneHotEncoder
 import xgboost as xgb
 from xgboost import DMatrix
 import numpy as np
+from datetime import datetime,date
 
 DATA_FILE_PATH = "data/data.csv"
 AIRPORT_DELAY_FILE_PATH = "data/airport_delay.csv"
@@ -17,6 +18,7 @@ CARRIER_DELAY_FILE_PATH = "static/carrier_delay.csv"
 AIRPORT_FILE_PATH = "data/airport_location.csv"
 UNIQUE_CARRIER_FILE_PATH = "data/unique_carriers.csv"
 
+HEATMAP_CALENDAR_FILE_PATH = "static/heatmap_data.csv"
 
 origin_col = "ORIGIN"
 dest_col = "DEST"
@@ -191,8 +193,6 @@ def prepare_data_predict(data,encoder,onehot_features,con_features):
 MODEL_PATH = "model/final.model"
 ENCODER_PATH = "model/onehot.encoder"
 
-
-
 def load_model():
 	model = joblib.load(MODEL_PATH)
 	encoder = joblib.load(ENCODER_PATH)
@@ -213,3 +213,14 @@ def query_data(dep,arr,date):
 	date = pd.Timestamp(date)
 	res = data[(data.FL_DATE == date)&(data.ORIGIN_CITY_NAME==dep)&(data.DEST_CITY_NAME==arr)]
 	return res
+
+
+def process_heatmap_data(data):
+	# data = pd.read_csv(DATA_FILE_PATH)
+	data = data[['FL_DATE','DEP_DEL15','CANCELLED']]
+	data = data.drop( data[(data['CANCELLED'] == 1)].index)
+	data.drop(columns=['CANCELLED'],inplace=True)
+	data = (data.groupby('FL_DATE').sum()/data.groupby('FL_DATE').count()*100).reset_index(drop=False)
+	data['FL_DATE'] = pd.to_datetime(data['FL_DATE'])
+	data['FL_DATE'] = data['FL_DATE'].apply(lambda x: x.strftime('%Y%m%d')).astype(int)
+	data.to_csv(path_or_buf=HEATMAP_CALENDAR_FILE_PATH,index = False)

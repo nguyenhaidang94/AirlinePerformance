@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-	return render_template("index.html")
+	return render_template("visualization.html")
 
 @app.route("/visualization",methods=["GET", "POST"])
 def visualize():
@@ -66,7 +66,7 @@ def import_data():
 		process_origin_carrier_delay(data)
 		process_flight_timeseries(data)
 		process_carrier_delay(data)
-
+		process_heatmap_data(data)
 		return render_template("upload_success.html")
 
 @app.route("/delayed-route/<airportCode>", methods=["GET"])
