@@ -12,7 +12,7 @@ var day = d3.timeFormat("%w"),
 	parseDate = d3.timeFormat("%Y%m%d").parse;
 
 var tooltip = d3.select(".calender-map").append("div")
-    	.attr("class", "tooltip")
+    	.attr("class", "heatmap-tooltip")
     	.style("opacity", 0);
 
 var svg = d3.select(".calender-map").selectAll("svg")
