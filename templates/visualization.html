@@ -20,22 +20,20 @@
   <script src="//unpkg.com/sunburst-chart"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
   <link rel="stylesheet" href="{{url_for('static', filename='autocomplete.css')}}">
 	<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
   <link rel="stylesheet" href="{{url_for('static', filename='bar.css')}}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-
 </head>
 
 <body>
 
 	<h1>Visualization</h1>
   <a href="{{url_for('home')}}">back</a>
-
 
   <div class="max-width">
   	<div id="map-graph">
@@ -58,10 +56,19 @@
 	<script src="{{url_for('static', filename='draw.js')}}"></script>
 	<div class="max-width">
 		<div id="flight-timeseries"></div>
+		<div id="flight-timeseries-description" class="paragraph">
+			<p>The total flights during the time has a weekly cycle. It can be seen clearly when zoom in. The number of flights is <b>low on Sunday, peaks on Tuesday, Friday, Saturday</b>.</p>
+			<p>The number delayed flights tends to have the same behavior.</p>
+		</div>
 	</div>
 	<script src="{{url_for('static', filename='flight-timeseries.js')}}"></script>
   <div class="max-width">
     <div id="parallel-carrier"></div>
+    <div id="parallel-carrier-description" class="paragraph">
+		<p><b>Southwest Airlines(WN)</b> has the <b>highest flights</b>, but <b>less delay</b>. <b>Delta Airlines(DL)</b> also has a <b>high flights</b>, but <b>lowest delay</b>.</p>
+		<p>American Airlines(AA), SkyWest Airlines(OO), United Airlines(UA) have less flights, but are as delayed as Southwest Airlines.</p>
+		<p>The rest have low flights, but high delay, which should be avoided when booking.</p>
+	</div>
   </div>
   <script src="{{url_for('static', filename='parallel-carrier.js')}}"></script>
   <br>
