@@ -69,11 +69,11 @@
 }
 
 .airport:hover {
-	fill: red;
+	fill: darkorange;
 }
 
 .route {
-	stroke: red;
+	stroke: darkorange;
 	fill: None;
 }
 
