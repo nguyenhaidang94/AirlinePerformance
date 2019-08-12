@@ -25,7 +25,6 @@
   <link rel="stylesheet" href="{{url_for('static', filename='bar.css')}}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 
@@ -60,6 +59,24 @@
     .RdYlGn .q9-11{fill:rgb(26,152,80)}
     .RdYlGn .q10-11{fill:rgb(0,104,55)}
     </style>
+    <script type="text/javascript">
+      function handleOnClick(){
+        console.log("click");
+        var departure = $("#depature").val();
+        var arrive = $("#arrive").val();
+        var date = $("#date").val();
+        $.ajax({
+          url: "http://127.0.0.1:5000/prediction/" + departure + "&" + arrive + "&" + date,
+          success: function(response){
+            console.log(response);
+          },
+          error: function(response){
+            console.log("request error");
+          }
+        });
+      }
+        
+    </script>
 </head>
 
 <body>
@@ -127,7 +144,7 @@
 
   <div id="predict">
 
-      <form class="form-inline" action="/visualization" method="post">
+      <!-- <form class="form-inline" action="/visualization" method="post"> -->
         <label for="depature">Enter Depature:</label>
         <div class="autocomplete" style="width:300px;">
           <input id="depature" type="text" name="myDepature" placeholder="Depature">
@@ -138,8 +155,8 @@
         </div>
         <label for="date">Enter date:</label>
         <input type="date" id="date"  name="date">
-        <input type="submit" value="Submit">
-      </form>
+        <button onclick="handleOnClick()">Submit</button>
+      <!-- </form> -->
   </div>
   <script src="{{url_for('static', filename='autocomplete.js')}}"></script>
   <br>
