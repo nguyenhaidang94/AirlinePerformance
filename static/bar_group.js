@@ -58,7 +58,7 @@
     function render(data,text) {
 
       var margin = {top: 50, right: 20, bottom: 60, left: 100},
-          width = 960 - margin.left - margin.right,
+          width = 750 - margin.left - margin.right,
           height = 500 - margin.top - margin.bottom;
 
 
@@ -107,8 +107,8 @@
 
 
           data = d3.nest()
-                        .key(function(d) { return d.DAY_OF_WEEK;})
-                        .entries(data);
+                   .key(function(d) { return d.DAY_OF_WEEK;})
+                   .entries(data);
 
 
 
@@ -180,8 +180,9 @@
                 .call((parent)=>parent.append("text")
                 .text(function(d){return d.NAME})
                 .attr("x", function(d, i) {
-                  return x1(d.type) + 15;
+                  return x1(d.type) +20 ;
                   })
+                .attr("text-anchor", "middle")
                   )
                   ;
             slice.selectAll("text")
