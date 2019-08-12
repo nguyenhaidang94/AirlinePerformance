@@ -14,34 +14,24 @@ app = Flask(__name__)
 def home():
 	return render_template("visualization.html")
 
-@app.route("/visualization",methods=["GET", "POST"])
+@app.route("/visualization",methods=["GET"])
 def visualize():
 	if request.method =="GET":
 		return render_template("visualization.html")
-	else:
 
-		dep = request.form["myDepature"]
-		arr = request.form["myArrive"]
-		date = request.form["date"]
-		## test data is dataframe
-		test_data = query_data(dep,arr,date)
-		model,encoder = load_model()
-		if len(test_data) == 0:
-			# return '''<h1>The data is: {}</h1>'''.format(date)
-			return '''<h1>Do not have flight in {}</h1>'''.format(date)
-		elif(len(test_data)>=1):
-			test_data['ranking'] = predict(test_data,encoder,model)
-			test_data = test_data.sort_values(by='ranking',ascending=True).reset_index()
+@app.route("/prediction/<departure>&<arrive>&<date>", methods=["GET"])
+def predict(departure, arrive, date):
+	test_data = query_data(departure, arrive, date)
+	model,encoder = load_model()
+	if len(test_data) == 0:
+		# return '''<h1>The data is: {}</h1>'''.format(date)
+		return '''<h1>Do not have flight in {}</h1>'''.format(date)
+	elif(len(test_data)>=1):
+		test_data['ranking'] = predict(test_data,encoder,model)
+		test_data = test_data.sort_values(by='ranking',ascending=True).reset_index()
+	result = test_data.head(5)[['OP_UNIQUE_CARRIER',"DEP_DELAY_NEW"]]
 
-		result = test_data.head(5)[['OP_UNIQUE_CARRIER',"DEP_DELAY_NEW"]]
-
-		# return '''<h1>The data is: {}</h1>'''.format(result.to_string())
-		return render_template("visualization.html",data=result.to_json(orient="records"))
-
-@app.route("/prediction",methods=["POST"])
-def predict():
-	print(request.get_json())
-	return "<h1>OK</h1>"
+	return result.to_json(orient="records")
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
