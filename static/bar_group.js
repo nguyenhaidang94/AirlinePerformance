@@ -51,7 +51,7 @@
 
     draw("http://127.0.0.1:5000/static/carrier.json","Carrier");
     draw("http://127.0.0.1:5000/static/airport_bc.json","Airport");
-
+    draw("http://127.0.0.1:5000/static/mean.json","MEAN");
 
 
 
@@ -95,6 +95,7 @@
           .append("g")
           .attr("transform", "translate(" + margin.left  + "," + margin.top + ")");
 
+          if (text == "MEAN") {
           svg2.append("text")
               .attr("class", "title")
               .attr("x", width/2)
@@ -102,8 +103,18 @@
               .attr("dy", "1.35em")
               .attr("font-weight","bold")
               .attr("text-anchor", "middle")
-              .text("Barchart shows the delay time according " + text + " in the day of week");
+              .text("Barchart shows the mean delay time in each day of week");
+            } else{
+              svg2.append("text")
+                  .attr("class", "title")
+                  .attr("x", width/2)
+                  .attr("y", height + (margin.bottom/2 ))
+                  .attr("dy", "1.35em")
+                  .attr("font-weight","bold")
+                  .attr("text-anchor", "middle")
+                  .text("Barchart shows the most delay " + text + " in each day of week");
 
+            }
 
 
           data = d3.nest()
@@ -155,38 +166,65 @@
                 .enter().append("g")
                 .attr("class", "g")
                 .attr("transform",function(d) { return "translate(" + x0(d.key) + ",0)"; });
+                if (text == "MEAN") {
+                  slice.selectAll("rect")
+                      .data(function(d) { return d.values; })
+                      .enter()
+                      .call((parent)=> parent.append("rect")
+                                             .attr("width",x0.bandwidth()/2)
+                                             .attr("x", function(d) { return x1(d.type); })
+                                             .style("fill", function(d) { return color(d.type)})
+                                             .attr("y", function(d) { return y(2); })
+                      // .attr("height", function(d) { return height - y(2); })
+                                              .attr("height", function(d) { return height - y(2);})
+                                              .on("mouseover", function(d) {
+                                                  d3.select(this).style("fill", d3.rgb(color(d.type)).darker(2));
+                                                  tooltip.text("Delay time: " + d.delay_time.toFixed(2)+" minutes")
+                                                          .style("visibility", "visible")
+                                                          .style("left", (d3.event.pageX) + "px")
+                                                          .style("top", (d3.event.pageY - 10) + "px");;
+                                                      })
+                                              .on("mouseout", function(d) {
+                                                      d3.select(this).style("fill", color(d.type));
+                                                      tooltip.style("visibility", "hidden") ;
+                                                    }));
 
-            slice.selectAll("rect")
-                .data(function(d) { return d.values; })
-                .enter()
-                .call((parent)=> parent.append("rect")
-                                       .attr("width",x0.bandwidth()/2)
-                                       .attr("x", function(d) { return x1(d.type); })
-                                       .style("fill", function(d) { return color(d.type)})
-                                       .attr("y", function(d) { return y(2); })
-                // .attr("height", function(d) { return height - y(2); })
-                                        .attr("height", function(d) { return height - y(2);})
-                                        .on("mouseover", function(d) {
-                                            d3.select(this).style("fill", d3.rgb(color(d.type)).darker(2));
-                                            tooltip.text("Delay time: " + d.delay_time.toFixed(2)+" minutes")
-                                                    .style("visibility", "visible")
-                                                    .style("left", (d3.event.pageX) + "px")
-                                                		.style("top", (d3.event.pageY - 10) + "px");;
-                                                })
-                                        .on("mouseout", function(d) {
-                                                d3.select(this).style("fill", color(d.type));
-                                                tooltip.style("visibility", "hidden") ;
-                                                }))
-                .call((parent)=>parent.append("text")
-                .text(function(d){return d.NAME})
-                .attr("x", function(d, i) {
-                  return x1(d.type) +20 ;
-                  })
-                .attr("text-anchor", "middle")
-                  )
-                  ;
-            slice.selectAll("text")
-                  .attr("y", function(d) { return y(d.delay_time) - 5 ; });
+                    } else  {
+                      slice.selectAll("rect")
+                          .data(function(d) { return d.values; })
+                          .enter()
+                          .call((parent)=> parent.append("rect")
+                                                 .attr("width",x0.bandwidth()/2)
+                                                 .attr("x", function(d) { return x1(d.type); })
+                                                 .style("fill", function(d) { return color(d.type)})
+                                                 .attr("y", function(d) { return y(2); })
+                          // .attr("height", function(d) { return height - y(2); })
+                                                  .attr("height", function(d) { return height - y(2);})
+                                                  .on("mouseover", function(d) {
+                                                      d3.select(this).style("fill", d3.rgb(color(d.type)).darker(2));
+                                                      tooltip.text("Delay time: " + d.delay_time.toFixed(2)+" minutes")
+                                                              .style("visibility", "visible")
+                                                              .style("left", (d3.event.pageX) + "px")
+                                                          		.style("top", (d3.event.pageY - 10) + "px");;
+                                                          })
+                                                  .on("mouseout", function(d) {
+                                                          d3.select(this).style("fill", color(d.type));
+                                                          tooltip.style("visibility", "hidden") ;
+                                                          }))
+                          .call((parent)=>parent.append("text")
+                          .text(function(d){return d.NAME})
+                          .attr("x", function(d, i) {
+                            return x1(d.type) +20 ;
+                            })
+                          .attr("text-anchor", "middle")
+                            )
+                            ;
+                      slice.selectAll("text")
+                            .attr("y", function(d) { return y(d.delay_time) - 5 ; });
+
+
+                    }
+
 
 
             slice.selectAll("rect")
@@ -209,13 +247,13 @@
                 .style("opacity","0");
 
             legend.append("rect")
-                .attr("x", width + 40)
+                .attr("x", width + 70)
                 .attr("width", 18)
                 .attr("height", 18)
                 .style("fill", function(d) { return color(d); });
 
             legend.append("text")
-                .attr("x", width +30)
+                .attr("x", width +60)
                 .attr("y", 9)
                 .attr("dy", ".35em")
                 .style("text-anchor", "end")

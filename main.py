@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, json, Response
 import pandas as pd
 import numpy as np
+from flask import jsonify
 from utils import *
 
 ALLOWED_EXTENSIONS = {'csv'}
@@ -18,6 +19,7 @@ def visualize():
 	if request.method =="GET":
 		return render_template("visualization.html")
 	else:
+
 		dep = request.form["myDepature"]
 		arr = request.form["myArrive"]
 		date = request.form["date"]
@@ -25,14 +27,21 @@ def visualize():
 		test_data = query_data(dep,arr,date)
 		model,encoder = load_model()
 		if len(test_data) == 0:
-			return '''<h1>The data is: {}</h1>'''.format(date)
-		elif(len(test_data)>1):
+			# return '''<h1>The data is: {}</h1>'''.format(date)
+			return '''<h1>Do not have flight in {}</h1>'''.format(date)
+		elif(len(test_data)>=1):
 			test_data['ranking'] = predict(test_data,encoder,model)
 			test_data = test_data.sort_values(by='ranking',ascending=True).reset_index()
 
-		result = test_data.head(5)[['OP_UNIQUE_CARRIER',"FL_DATE"]]
+		result = test_data.head(5)[['OP_UNIQUE_CARRIER',"DEP_DELAY_NEW"]]
 
-		return '''<h1>The data is: {}</h1>'''.format(result.to_string())
+		# return '''<h1>The data is: {}</h1>'''.format(result.to_string())
+		return render_template("visualization.html",data=result.to_json(orient="records"))
+
+@app.route("/prediction",methods=["POST"])
+def predict():
+	print(request.get_json())
+	return "<h1>OK</h1>"
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
