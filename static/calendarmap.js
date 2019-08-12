@@ -1,19 +1,15 @@
 
 var width = 900,
     height = 105,
-    cellSize = 12; // cell size
+    cellSize = 13; // cell size
     week_days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
     month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    //month = ['Jan']
 
 var day = d3.timeFormat("%w"),
     week = d3.timeFormat("%U"),
     percent = d3.format(".1%"),
 	format = d3.timeFormat("%Y%m%d");
 	parseDate = d3.timeFormat("%Y%m%d").parse;
-
-//var color = d3.scale.linear().range(["white", 'red'])
-//    .domain([0, 1])
 
 var tooltip = d3.select(".calender-map").append("div")
     	.attr("class", "tooltip")
@@ -31,6 +27,7 @@ var svg = d3.select(".calender-map").selectAll("svg")
 
 svg.append("text")
     .attr("transform", "translate(-38," + cellSize * 3.5 + ")rotate(-90)")
+    .attr("font-size",10)
     .style("text-anchor", "middle")
     .text(function(d) { return d; });
 
@@ -40,17 +37,16 @@ svg.append("text")
     .attr("transform", "translate(-5," + cellSize*(i+1) + ")")
     .style("text-anchor", "end")
     .attr("dy", "-.25em")
+    .attr("font-size",12)
     .text(function(d) { return week_days[i]; });
  }
 
-
-
-
 var legend = svg.selectAll(".legend")
-      .data(month)
-      .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(" + (((i+1) * 50)+8) + ",0)"; });
+    .data(month)
+    .enter().append("g")
+    .attr("class", "legend")
+    .attr("font-size",12)
+    .attr("transform", function(d, i) { return "translate(" + (((i+1) * 55)+8) + ",0)"; });
 
 legend.append("text")
    .attr("class", function(d,i){ return month[i] })
@@ -59,84 +55,81 @@ legend.append("text")
    .attr("dx", "-2.5em")
    .text(function(d,i){ return month[i] });
 
+   var rect = svg.selectAll(".day")
+         //.data(csv)
+         .data(function(d) {
+           return d3.timeDay.range(new Date(d, 0, 1), new Date(d + 1, 0, 1));
+          })
+         .enter()
+     	  .append("rect")
+         .attr("class", "day")
+         .attr("width", cellSize)
+         .attr("height", cellSize)
+         .attr("x", function(d) {return week(d) * cellSize;})
+         .attr("y", function(d) { return day(d) * cellSize; })
+         .attr("fill",'#fff')
+         //.attr("fill", function(d) { return color(d);})
+         .datum(format);
+
+   svg.selectAll(".month")
+          //.data(csv)
+          .data(function(d) { return d3.timeMonths(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+          .enter().append("path")
+          .attr("class", "month")
+          .attr("id", function(d,i){
+            return month[i]; })
+          .attr("d", monthPath);
+
+
 var timeparse = d3.timeParse("%Y%m%d")
 
-d3.csv("http://127.0.0.1:5000/static/data.csv").then( function( csv) {
+d3.csv("http://127.0.0.1:5000/static/data.csv").then( function(csv) {
 
   csv.forEach(function(d) {
     d.DEP_DEL15 = parseFloat(d.DEP_DEL15);
   });
 
- var DEP_DEL15_Max = d3.max(csv, function(d) { return d.DEP_DEL15; });
+// svg.selectAll(".day")
+//       .data(csv)
+//       .enter()
+//   	  .append("rect")
+//       .attr("class", "day")
+//       .attr("width", cellSize)
+//       .attr("height", cellSize)
+//       .attr("x", function(d) { return week(timeparse(d.FL_DATE)) * cellSize; })
+//       .attr("y", function(d) { return day(timeparse(d.FL_DATE)) * cellSize; })
+//       .attr("fill",'#000')
+//       .attr("fill", function(d) { return color(d);})
+//       .on("mouseover", function(d){displayTooltip_calendar(d); })
+//       .on("mouseout", function(d){ hideTooltip() })
 
-  // var data = d3.nest()
-  //   .key(function(d) { return d.FL_DATE; })
-  //   //.rollup(function(d) { return  Math.sqrt(d[0].DEP_DEL15 / DEP_DEL15_Max); })
-  //   .rollup(function(d) { return  d[0].DEP_DEL15; })
-  //   .map(csv);
-  let global_d
+  //
+  // svg.selectAll(".month")
+  //    .data(csv)
+  //    //.data(function(d) { return d3.timeMonths(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+  //    .enter().append("path")
+  //    .attr("class", "month")
+  //    .attr("id", function(d,i){ return month[i]; })
+  //    .attr("d", function(d,i){return monthPath(d);})
+  var data = d3.nest()
+    .key(function(d) { return d.FL_DATE; })
+    .map(csv);
 
+    rect.filter(function(d) {
+        return ("$"+d) in data;
+      })
+      .attr("fill", function(d) {
+        return color(data[("$" +  d)][0]);
+      })
+     .on("mouseover", function(d){displayTooltip_calendar(data[("$" +  d)][0]); })
+     .on("mouseout", function(d){ hideTooltip() })
 
-
-  var rect = svg.selectAll(".day")
-      .data(csv)
-    //  .data(function(d) { return d3.timeDay(new Date(d, 0, 1), new Date(d+1, 0, 1)); })
-      .enter()
-  	  .append("rect")
-      .attr("class", "day")
-      .attr("width", cellSize)
-      .attr("height", cellSize)
-      .attr("x", function(d) { return week(timeparse(d.FL_DATE)) * cellSize; })
-      .attr("y", function(d) { return day(timeparse(d.FL_DATE)) * cellSize; })
-      .attr("fill",'#fff')
-      .attr("fill", function(d) { return color(d);})
-      .on("mouseover", function(d){displayTooltip_calendar(d); })
-      .on("mouseout", function(d){ hideTooltip() })
-      .datum(format);
-
-      // var data = d3.nest()
-      //   .key(function(d) { return d.FL_DATE; })
-      //   //.rollup(function(d) { return  Math.sqrt(d[0].Comparison_Type / Comparison_Type_Max); })
-      //   .rollup(function(d) { return  d[0].DEP_DEL15; })
-      //   .map(csv);
-      //
-      //
-      //
-      // rect.filter(function(d) { return d in data; })
-      //     .attr("fill", function(d) { return color(d);})
-       // .on("mouseover", function(d){
-       //   displayTooltip_calendar(d); })
-       // .on("mouseout", function(d){ hideTooltip() })
-      //     .attr("fill", function(d) { return color(data[d]); })
-    	//     .attr("data-title", function(d) { return "value : "+Math.round(data[d])});
-    	// $("rect").tooltip({container: 'body', html: true, placement:'top'});
-
-   //rect.filter(function(d) { return d in csv; })
-  //     .attr("fill", function(d) { return color(d.DEP_DEL15); })
-	//     //.attr("data-title", function(d) { return "value : " + Math.round(data[d])})
-  //     .on("mouseover", function(d){ displayTooltip(d.FL_DATE,d.DEP_DEL15); })
-  //     .on("mouseout", function(d){ hideTooltip() });
-
-	//$("rect").tooltip({container: 'body', html: true, placement:'top'});
-
-  svg.selectAll(".month")
-      .data(csv)
-      .enter().append("path")
-      .attr("class", "month")
-      .attr("id", function(i){ return month[i]; })
-      .attr("d",function(d){return monthPath(timeparse(d.FL_DATE));});
+	 //$("rect").tooltip({container: 'body', html: true, placement:'top'});
 });
 
-// function numberWithCommas(x) {
-//     x = x.toString();
-//     var pattern = /(-?\d+)(\d{3})/;
-//     while (pattern.test(x))
-//         x = x.replace(pattern, "$1,$2");
-//     return x;
-// }
 
 function monthPath(t0) {
-  var t1 = new Date(t0.getFullYear(), t0.getMonth()+1, 0),
+  var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
       d0 = +day(t0), w0 = +week(t0),
       d1 = +day(t1), w1 = +week(t1);
   return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
@@ -145,15 +138,19 @@ function monthPath(t0) {
       + "H" + (w1 + 1) * cellSize + "V" + 0
       + "H" + (w0 + 1) * cellSize + "Z";
 }
+
 function displayTooltip_calendar(d){
+  var date = timeparse(d.FL_DATE)
+  var yyyy = date.getFullYear().toString();
+  var mm = (date.getMonth()+1).toString();
+  var dd  = date.getDate().toString();
   tooltip.transition().duration(200);
-  tooltip.html('Date: ' + d.FL_DATE + "<br>"
+  tooltip.html('Date: ' + yyyy + '/' + mm + '/' + dd + "<br>"
        + "Delay Percentage: "+ d.DEP_DEL15.toFixed(2) + "<br>")
-      //+ "Delayed flights: " + parseFloat(item.pct_delay_flight).toFixed(2) + "%" + "<br>"
-      //+ "Average delay: " + parseFloat(item.avg_delay).toFixed(0) + " minutes")
   .style("opacity", 0.9)
-  .style("left", (d3.event.pageX) + "px")
-  .style("top", (d3.event.pageY - 32) + "px");
+  .style("left", (d3.event.pageX+16) + "px")
+  .style("top", (d3.event.pageY) + "px")
+  .style("height","32px")
 }
 
 function hideTooltip(){

@@ -35,7 +35,8 @@
   line-height: 14px;
   color: rgb(51, 51, 51);
   font-family: Helvetica, arial, 'Open Sans', sans-serif;
-  background: rgba(255, 255, 255, 0.75);
+  /* background: rgba(255, 255, 255, 0.75); */
+  background: red;
 }
 .calendar-heatmap .heatmap-tooltip .header strong {
   display: inline-block;
@@ -52,4 +53,16 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.heatmaptooltip {
+	position: absolute;
+	text-align: center;
+	width: 180px;
+	height: 32px;
+	padding: 2px;
+	font: 12px sans-serif;
+	background: red;
+	border: 0px;
+	border-radius: 8px;
+	pointer-events: none;
 }
