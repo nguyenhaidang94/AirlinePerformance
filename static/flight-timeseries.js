@@ -9,7 +9,7 @@ d3.csv("http://127.0.0.1:5000/static/flight-timeseries.csv").then(function(fligh
 	  name: 'Flights',
 	  x: unpack(flights, 'FL_DATE'),
 	  y: unpack(flights, 'n_flights'),
-	  line: {color: 'turquoise'}
+	  line: {color: 'steelblue'}
 	}
 
 	var trace2 = {

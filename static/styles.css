@@ -25,8 +25,26 @@
 	float: left;
 }
 
-#flight-timeseries, #parallel-carrier {
+#flight-timeseries {
 	width: 70%;
+	float: left;
+}
+
+#flight-timeseries-description {
+	width: 30%;
+	float: left;
+	margin-top: 175px;
+}
+
+#parallel-carrier {
+	width: 70%;
+	float: left;;
+}
+
+#parallel-carrier-description {
+	width: 30%;
+	float: left;
+	margin-top: 175px;
 }
 
 .max-width {
@@ -51,12 +69,19 @@
 }
 
 .airport:hover {
-	fill: red;
+	fill: darkorange;
 }
 
 .route {
-	stroke: red;
+	stroke: darkorange;
 	fill: None;
+}
+
+.paragraph > p {
+	text-align: justify;
+	text-indent: 30px;
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
 
 div.tooltip {	

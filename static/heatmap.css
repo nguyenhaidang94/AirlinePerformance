@@ -1,0 +1,12 @@
+.heatmap-tooltip {
+	position: absolute;
+	text-align: center;
+	width: 180px;
+	height: 64px;
+	padding: 2px;
+	font: 12px sans-serif;
+	background: paleturquoise;
+	border: 0px;
+	border-radius: 8px;
+	pointer-events: none;
+}
