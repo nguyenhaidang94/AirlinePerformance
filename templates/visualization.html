@@ -26,7 +26,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> -->
   <script src="http://malsup.github.com/jquery.form.js"></script>
 
 
@@ -66,11 +66,7 @@
 
 <body>
 
-<<<<<<< HEAD
-	<h1>Visualization</h1>
-=======
 	<h1>ANALYSIS OF US AIRLINE PERFORMANCE</h1>
->>>>>>> 65d1657d9ffa43b2d40190c952da3e16a8f7dc39
   <a href="{{url_for('import_data')}}">Import data</a>
 
   <h1 style="text-align: center;">Spatial Effect</h1>
@@ -106,8 +102,6 @@
     </div>
 	</div>
 	<script src="{{url_for('static', filename='flight-timeseries.js')}}"></script>
-<<<<<<< HEAD
-=======
   <hr>
 
   <h1 style="text-align: center;">Carrier Effect</h1>
@@ -122,32 +116,11 @@
   </div>
   <script src="{{url_for('static', filename='parallel-carrier.js')}}"></script>
   <hr>
->>>>>>> 65d1657d9ffa43b2d40190c952da3e16a8f7dc39
   <br>
   <br>
-  <p>Predict for flight</p>
 
-  <div id="predict">
 
-      <form class="form-inline" id="myform" method="post">
-        <label for="depature">Enter Depature:</label>
-        <div class="autocomplete" style="width:300px;">
-          <input id="depature" type="text" name="myDepature" placeholder="Depature">
-        </div>
-        <label for="arrive">Enter Arrive:</label>
-        <div class="autocomplete" style="width:300px;">
-          <input id="arrive" type="text" name="myArrive" placeholder="Arrive">
-        </div>
-        <label for="date">Enter date:</label>
-        <input type="date" id="date"  name="date">
-        <input type="submit" value="Submit">
-      </form>
-  </div>
-
-  <script src="{{url_for('static', filename='autocomplete.js')}}"></script>
-
-  <div id ="result"></div>
-  
+<script src="{{url_for('static', filename='simple_barchart.js')}}"></script>
   <script type="text/javascript">
   $('#myform').submit(function () {
        sendForm();
@@ -164,12 +137,18 @@
           console.log(response);
           CreateTableFromJSON(response);
 
+          // draw_barchart(response,"visualize_result");
+
         },
         error: function(response){
           console.log("request error");
         }
       });
     }
+
+
+
+
     function CreateTableFromJSON(data) {
 
 
@@ -235,6 +214,30 @@
     <h1>Heatmap calendar for percentag of delays on each day</h1>
   </div>
   <script src="{{url_for('static', filename='calendarmap.js')}}"></script>
+
+  <h1>Predict for flight</h1>
+
+  <div id="predict">
+
+      <form class="form-inline" id="myform" method="post">
+        <label for="depature">Enter Depature:</label>
+        <div class="autocomplete" style="width:300px;">
+          <input id="depature" type="text" name="myDepature" placeholder="Depature">
+        </div>
+        <label for="arrive">Enter Arrive:</label>
+        <div class="autocomplete" style="width:300px;">
+          <input id="arrive" type="text" name="myArrive" placeholder="Arrive">
+        </div>
+        <label for="date">Enter date:</label>
+        <input type="date" id="date"  name="date">
+        <input type="submit" value="Submit">
+      </form>
+  </div>
+
+  <script src="{{url_for('static', filename='autocomplete.js')}}"></script>
+
+  <div id ="result"></div>
+  <div id='visualize_result'></div>
 </body>
 
 </html>

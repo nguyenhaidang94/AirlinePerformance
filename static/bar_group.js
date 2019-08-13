@@ -49,17 +49,18 @@
         });
       }
 
+
+    draw("http://127.0.0.1:5000/static/mean.json","MEAN");
     draw("http://127.0.0.1:5000/static/carrier.json","Carrier");
     draw("http://127.0.0.1:5000/static/airport_bc.json","Airport");
-    draw("http://127.0.0.1:5000/static/mean.json","MEAN");
 
 
 
     function render(data,text) {
 
-      var margin = {top: 50, right: 20, bottom: 60, left: 100},
-          width = 750 - margin.left - margin.right,
-          height = 500 - margin.top - margin.bottom;
+      var margin = {top: 20, right: 20, bottom: 40, left: 50},
+          width = 450 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
 
 
 

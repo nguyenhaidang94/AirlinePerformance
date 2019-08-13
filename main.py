@@ -34,8 +34,10 @@ def start_predict():
 	elif(len(test_data)>=1):
 		test_data['ranking'] = predict(test_data,encoder,model)
 		test_data = test_data.sort_values(by='ranking',ascending=True).reset_index()
-	result = test_data.head(5)[['OP_UNIQUE_CARRIER',"DEP_DELAY_NEW"]]
-
+	result = test_data[['OP_UNIQUE_CARRIER',"CRS_DEP_TIME","DEP_DELAY_NEW"]]
+	result["CRS_DEP_TIME"] = result["CRS_DEP_TIME"].apply(lambda x: str(int(x/60))+":"+str(x%60) if ((x%60)>=10)\
+	 														else str(int(x/60))+":"+ "0" +str(x%60))
+	result = result.rename(columns={'OP_UNIQUE_CARRIER':"Carrier","CRS_DEP_TIME":"Departure time","DEP_DELAY_NEW":"True delayed time"})
 	return Response(result.to_json(orient="records"), status=200, mimetype='application/json')
 
 def allowed_file(filename):
