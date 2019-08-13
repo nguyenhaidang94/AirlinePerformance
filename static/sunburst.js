@@ -1,8 +1,7 @@
 
 
-draw_sunburst("http://127.0.0.1:5000/static/sunburst_data.json","Percentage of delayed flight in each airline")
-
-function draw_sunburst(link,text){
+draw_sunburst("http://127.0.0.1:5000/static/sunburst_data.json","Number of delayed flight","sunburst")
+function draw_sunburst(link,text,div_id){
   d3.json(link, function(d) {
     return {
           DAY_OF_WEEK:  d.DAY_OF_WEEK,
@@ -21,7 +20,7 @@ function draw_sunburst(link,text){
     .showLabels(true)
     .excludeRoot(false)
     .tooltipContent((d, node) => text + ` : <i>${node.value}</i>`)
-    (document.getElementById('sunburst'));
+    (document.getElementById(div_id));
   });
 
 }

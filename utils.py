@@ -44,18 +44,44 @@ def process_airport_delay(data):
 	used_columns = [origin_col, dest_col, dep_delay_new_col, dep_delay_15_col]
 	return data[used_columns]
 
+def save_barchart_data(data):
+	types = ["mean","airport_bc","carrier"]
+	for type in types:
+		process_data_barchart(data,type)
 
 def process_data_barchart(data,typechart):
 	dp_columns = ["DAY_OF_WEEK","DEP_DELAY_NEW"]
 	ar_columns = ["DAY_OF_WEEK","ARR_DELAY_NEW"]
-	if typechart == "CARRIER":
+	if (type == "mean"):
+		dep = data[dp_columns].groupby(["DAY_OF_WEEK"]).\
+		        agg('mean').reset_index().\
+		        rename(columns={'DEP_DELAY_NEW':'delay_time'})
+
+
+		dep['type'] = "DEP"
+
+		arrive = data[ar_columns].groupby(["DAY_OF_WEEK"]).\
+		        agg('mean').reset_index().\
+		        rename(columns={'ARR_DELAY_NEW':'delay_time'})
+
+
+		arrive['type'] = "ARR"
+
+		res = pd.concat((dep,arrive),axis=0).reset_index()
+
+		res.to_json(path_or_buf='static/mean.json')
+		return
+
+	elif (typechart == "carrier"):
 		dp_add_column = ["OP_UNIQUE_CARRIER"]
 		ar_add_column = ["OP_UNIQUE_CARRIER"]
 
-	else:
+	elif(typechart == "airport_bc"):
 
 		dp_add_column = ["ORIGIN"]
 		ar_add_column = ["DEST"]
+
+
 
 	dp_columns = dp_columns + dp_add_column
 	ar_columns = ar_columns + ar_add_column
@@ -79,16 +105,19 @@ def process_data_barchart(data,typechart):
 
 	res = pd.concat((dep,arrive),axis=0).reset_index()
 
-	return res
+	res.to_json(path_or_buf='static/'+'typechart'+'.json')
+	return
+
 
 def process_data_sunburst(data):
 	used_columns = ["DAY_OF_WEEK","OP_UNIQUE_CARRIER","DEP_DELAY_NEW"]
 	res = data[used_columns][data.DEP_DELAY_NEW>0].\
 								groupby(["DAY_OF_WEEK","OP_UNIQUE_CARRIER"]).\
 							    agg('count')
-	res["Node"] = "root"
+	res["Node"] = "Distrubtion of Flight"
 
-	return res
+	res.to_json(path_or_buf='static/sunburst_data.json')
+
 
 def process_origin_delay(delay_data, airport_info):
 	data = delay_data.copy()
