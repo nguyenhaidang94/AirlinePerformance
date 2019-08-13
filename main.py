@@ -65,7 +65,7 @@ def import_data():
 		process_carrier_delay(data)
 		process_heatmap_data(data)
 
-		process_data_sunburst(data)
+		process_data_sunburst(data,"CARRIER")
 		save_barchart_data(data)
 		return render_template("upload_success.html")
 

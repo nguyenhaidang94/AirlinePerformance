@@ -58,25 +58,26 @@ def process_data_barchart(data,typechart):
 		        rename(columns={'DEP_DELAY_NEW':'delay_time'})
 
 
-		dep['type'] = "DEP"
+		dep['type'] = "Depature"
 
 		arrive = data[ar_columns].groupby(["DAY_OF_WEEK"]).\
 		        agg('mean').reset_index().\
 		        rename(columns={'ARR_DELAY_NEW':'delay_time'})
 
 
-		arrive['type'] = "ARR"
+		arrive['type'] = "Arrival"
+		res["NAME"] = "HIEU"
 
 		res = pd.concat((dep,arrive),axis=0).reset_index()
 
-		res.to_json(path_or_buf='static/mean.json')
+		res.to_json(path_or_buf='static/mean.json',orient='records')
 		return
 
 	elif (typechart == "carrier"):
 		dp_add_column = ["OP_UNIQUE_CARRIER"]
 		ar_add_column = ["OP_UNIQUE_CARRIER"]
 
-	elif(typechart == "airport_bc"):
+	else:
 
 		dp_add_column = ["ORIGIN"]
 		ar_add_column = ["DEST"]
@@ -93,7 +94,7 @@ def process_data_barchart(data,typechart):
 	        sort_values(by="delay_time",ascending=False).\
 	            groupby("DAY_OF_WEEK").first()
 
-	dep['type'] = "DEP"
+	dep['type'] = "Depature"
 
 	arrive = data[ar_columns].groupby(["DAY_OF_WEEK"]+ar_add_column).\
 	        agg('mean').reset_index().\
@@ -101,22 +102,32 @@ def process_data_barchart(data,typechart):
 	        sort_values(by="delay_time",ascending=False).\
 	            groupby("DAY_OF_WEEK").first()
 
-	arrive['type'] = "ARR"
+	arrive['type'] = "Arrival"
 
 	res = pd.concat((dep,arrive),axis=0).reset_index()
-
-	res.to_json(path_or_buf='static/'+'typechart'+'.json')
+	day = {1:"Monday",2:"Tuesday",3:"Wednesday",4:"Thursday",5:"Friday",6:"Saturday",7:"Sunday"}
+	res.DAY_OF_WEEK = res.DAY_OF_WEEK.apply(lambda x: day[x])
+	res.to_json(path_or_buf='static/'+typechart+'.json',orient='records')
 	return
 
-
-def process_data_sunburst(data):
-	used_columns = ["DAY_OF_WEEK","OP_UNIQUE_CARRIER","DEP_DELAY_NEW"]
+def process_data_sunburst(data,typechart):
+	used_columns = ["DAY_OF_WEEK","DEP_DELAY_NEW"]
+	if typechart == "CARRIER":
+		add_column = ['OP_UNIQUE_CARRIER']
+	else:
+		add_column = ['ORIGIN']
+	used_columns += add_column
 	res = data[used_columns][data.DEP_DELAY_NEW>0].\
-								groupby(["DAY_OF_WEEK","OP_UNIQUE_CARRIER"]).\
-							    agg('count')
-	res["Node"] = "Distrubtion of Flight"
+	            groupby(["DAY_OF_WEEK"]+add_column).\
+	              agg('count')
 
-	res.to_json(path_or_buf='static/sunburst_data.json')
+	res["Node"] = "Distribution of delay flight"
+	res = res.reset_index()
+	day = {1:"Monday",2:"Tuesday",3:"Wednesday",4:"Thursday",5:"Friday",6:"Saturday",7:"Sunday"}
+	res["DAY_OF_WEEK"] = res["DAY_OF_WEEK"].apply(lambda x: day[x])
+	res = res.rename(columns={"DEP_DELAY_NEW":"count"})
+	res.to_json(path_or_buf='static/sunburst_data.json',orient='records')
+
 
 
 def process_origin_delay(delay_data, airport_info):
@@ -248,7 +259,7 @@ def process_heatmap_data(data):
 	# data = pd.read_csv(DATA_FILE_PATH)
 	data = data[['FL_DATE','DEP_DEL15','CANCELLED']]
 	data = data.drop( data[(data['CANCELLED'] == 1)].index)
-	data.drop(columns=['CANCELLED'],inplace=True)
+	# data.drop(columns=['CANCELLED'],inplace=True)
 	data = (data.groupby('FL_DATE').sum()/data.groupby('FL_DATE').count()*100).reset_index(drop=False)
 	data['FL_DATE'] = pd.to_datetime(data['FL_DATE'])
 	data['FL_DATE'] = data['FL_DATE'].apply(lambda x: x.strftime('%Y%m%d')).astype(int)

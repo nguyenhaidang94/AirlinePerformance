@@ -125,6 +125,56 @@
   <script src="{{url_for('static', filename='parallel-carrier.js')}}"></script>
   <hr>
 
+
+
+
+  <h1 style="text-align: center;">Suggestion</h1>
+  <div id = "mydiv">
+    <h2>Barchart for average delayed time in day of week</h2>
+  </div>
+  <script src="{{url_for('static', filename='bar_group.js')}}"></script>
+  <br>
+  <br>
+  <br>
+
+  <div id = "sunburst">
+    <h1>Sunburst chart for total delay flight</h1>
+  </div>
+  <script src="{{url_for('static', filename='sunburst.js')}}"></script>
+
+
+
+
+  <script src="{{url_for('static', filename='autocomplete.js')}}"></script>
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <h1 style="text-align: center;">Prediction</h1>
+  <br>
+  <br>
+  <div id="predict">
+
+      <form class="form-inline" id="myform" method="post">
+        <label for="depature">Enter Depature:</label>
+        <div class="autocomplete" style="width:300px;">
+          <input id="depature" type="text" name="myDepature" placeholder="Depature">
+        </div>
+        <label for="arrive">Enter Arrive:</label>
+        <div class="autocomplete" style="width:300px;">
+          <input id="arrive" type="text" name="myArrive" placeholder="Arrive">
+        </div>
+        <label for="date">Enter date:</label>
+        <input type="date" id="date"  name="date">
+        <input type="submit" value="Submit">
+      </form>
+  </div>
+  <br>
+  
+  <div id ="result"></div>
+  <div id='visualize_result'></div>
+
   <script type="text/javascript">
   $('#myform').submit(function () {
        sendForm();
@@ -141,8 +191,6 @@
           console.log(response);
           CreateTableFromJSON(response);
 
-          // draw_barchart(response,"visualize_result");
-
         },
         error: function(response){
           console.log("request error");
@@ -151,13 +199,8 @@
     }
 
 
-
-
     function CreateTableFromJSON(data) {
 
-
-        // EXTRACT VALUE FOR HTML HEADER.
-        // ('Book ID', 'Book Name', 'Category' and 'Price')
         var col = [];
         for (var i = 0; i < data.length; i++) {
             for (var key in data[i]) {
@@ -199,44 +242,12 @@
       }
 
   </script>
-  <h1 style="text-align: center;">Suggestion</h1>
-  <div id = "mydiv">
-    <h2>Barchart for average delayed time in day of week</h2>
-  </div>
-  <script src="{{url_for('static', filename='bar_group.js')}}"></script>
   <br>
   <br>
   <br>
 
-  <div id = "sunburst">
-    <h1>Sunburst chart for total delay flight</h1>
-  </div>
-  <script src="{{url_for('static', filename='sunburst.js')}}"></script>
 
 
-  <h2>Prediction</h2>
-
-  <div id="predict">
-
-      <form class="form-inline" id="myform" method="post">
-        <label for="depature">Enter Depature:</label>
-        <div class="autocomplete" style="width:300px;">
-          <input id="depature" type="text" name="myDepature" placeholder="Depature">
-        </div>
-        <label for="arrive">Enter Arrive:</label>
-        <div class="autocomplete" style="width:300px;">
-          <input id="arrive" type="text" name="myArrive" placeholder="Arrive">
-        </div>
-        <label for="date">Enter date:</label>
-        <input type="date" id="date"  name="date">
-        <input type="submit" value="Submit">
-      </form>
-  </div>
-
-  <script src="{{url_for('static', filename='autocomplete.js')}}"></script>
-
-  <div id ="result"></div>
-  <div id='visualize_result'></div>
 </body>
 
 </html>
