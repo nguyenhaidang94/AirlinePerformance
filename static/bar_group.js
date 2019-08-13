@@ -58,7 +58,7 @@
 
     function render(data,text) {
 
-      var margin = {top: 20, right: 20, bottom: 40, left: 50},
+      var margin = {top: 50, right: 20, bottom: 60, left: 40},
           width = 450 - margin.left - margin.right,
           height = 400 - margin.top - margin.bottom;
 
@@ -100,8 +100,8 @@
           svg2.append("text")
               .attr("class", "title")
               .attr("x", width/2)
-              .attr("y", height + (margin.bottom/2 ))
-              .attr("dy", "1.35em")
+              .attr("y", height + (margin.bottom/1.5 ))
+              .attr("dy", ".5em")
               .attr("font-weight","bold")
               .attr("text-anchor", "middle")
               .text("Barchart shows the mean delay time in each day of week");
@@ -110,9 +110,10 @@
                   .attr("class", "title")
                   .attr("x", width/2)
                   .attr("y", height + (margin.bottom/2 ))
-                  .attr("dy", "1.35em")
+                  .attr("dy", ".5em")
                   .attr("font-weight","bold")
                   .attr("text-anchor", "middle")
+                  .attr("font-size","16px")
                   .text("Barchart shows the most delay " + text + " in each day of week");
 
             }
@@ -136,7 +137,7 @@
                 .attr("transform", "translate(0," + height + ")")
                 .call(xAxis)
                 .append("text")
-                .attr("x",width+50)
+                .attr("x",width + 60)
                 .attr("y",7)
                 .attr("dy", ".71em")
                 .attr("fill","black")
@@ -155,7 +156,7 @@
                 .attr("x",0)
                 .attr("dy", ".71em")
                 .attr("fill","black")
-                .attr("font-size","12px")
+                .attr("font-size","10px")
                 .style("text-anchor", "end")
                 .style('font-weight','bold')
                 .text("Minutes");
@@ -215,13 +216,18 @@
                           .call((parent)=>parent.append("text")
                           .text(function(d){return d.NAME})
                           .attr("x", function(d, i) {
-                            return x1(d.type) +20 ;
+                            return x1(d.type) +13 ;
                             })
                           .attr("text-anchor", "middle")
+                          .attr("dy","0.3em")
+                          .style("font-size", "11px")
                             )
                             ;
                       slice.selectAll("text")
-                            .attr("y", function(d) { return y(d.delay_time) - 5 ; });
+                            .attr("y", function(d) { return y(d.delay_time)-10 ; })
+
+                            ;
+
 
 
                     }
@@ -258,7 +264,8 @@
                 .attr("y", 9)
                 .attr("dy", ".35em")
                 .style("text-anchor", "end")
-                .text(function(d) {return d; });
+                .text(function(d) {return d; })
+                .style("font-size", "16px");
 
             legend.transition().duration(500).delay(function(d,i){ return 1300 + 100 * i; }).style("opacity","1");
 
