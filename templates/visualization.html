@@ -26,7 +26,6 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> -->
   <script src="http://malsup.github.com/jquery.form.js"></script>
 
 
@@ -102,6 +101,15 @@
     </div>
 	</div>
 	<script src="{{url_for('static', filename='flight-timeseries.js')}}"></script>
+  <div class = 'calender-map '>
+    <h1>Heatmap calendar for percentage of delays on each day</h1>
+  </div>
+  <script src="{{url_for('static', filename='calendarmap.js')}}"></script>
+  <div id="calender-map" class="paragraph">
+    <br>
+    <p>It is clear that most delays took place in <b>Winter season</b> (highest in February). Many  resources  has  reported  that  this  incident  was  due  to  heavy  winter  storm.</p>
+    <p>Weather condition aside, it is <b>ideal</b> to fly on <b>Wednesday or Sunday</b> and <b>avoid</b> seasons having <b>extreme weather</b>. </p>
+  </div>
   <hr>
 
   <h1 style="text-align: center;">Carrier Effect</h1>
@@ -116,11 +124,7 @@
   </div>
   <script src="{{url_for('static', filename='parallel-carrier.js')}}"></script>
   <hr>
-  <br>
-  <br>
 
-
-<script src="{{url_for('static', filename='simple_barchart.js')}}"></script>
   <script type="text/javascript">
   $('#myform').submit(function () {
        sendForm();
@@ -195,10 +199,9 @@
       }
 
   </script>
-  <br>
-  <br>
+  <h1 style="text-align: center;">Suggestion</h1>
   <div id = "mydiv">
-    <h1>Barchart for mean delaytime in day of week</h1>
+    <h2>Barchart for average delayed time in day of week</h2>
   </div>
   <script src="{{url_for('static', filename='bar_group.js')}}"></script>
   <br>
@@ -210,12 +213,8 @@
   </div>
   <script src="{{url_for('static', filename='sunburst.js')}}"></script>
 
-  <div class = 'calender-map '>
-    <h1>Heatmap calendar for percentag of delays on each day</h1>
-  </div>
-  <script src="{{url_for('static', filename='calendarmap.js')}}"></script>
 
-  <h1>Predict for flight</h1>
+  <h2>Prediction</h2>
 
   <div id="predict">
 
